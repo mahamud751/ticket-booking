@@ -51,15 +51,24 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
     }),
   ],
   session: {
     strategy: "jwt",
   },
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ user, account, profile }) {
       if (account?.provider === "google") {
         try {
+          console.log("Google sign-in attempt:", { email: user.email, name: user.name });
+          
           // Check if user exists
           const existingUser = await prisma.user.findUnique({
             where: { email: user.email! },
@@ -67,6 +76,7 @@ export const authOptions: NextAuthOptions = {
 
           if (!existingUser) {
             // Create new user for Google signup
+            console.log("Creating new user for Google sign-in:", user.email);
             await prisma.user.create({
               data: {
                 email: user.email!,
@@ -75,10 +85,17 @@ export const authOptions: NextAuthOptions = {
                 role: "USER",
               },
             });
+            console.log("Successfully created new user:", user.email);
+          } else {
+            console.log("Existing user found:", user.email);
           }
           return true;
         } catch (error) {
           console.error("Google sign-in error:", error);
+          console.error("Error details:", {
+            message: error instanceof Error ? error.message : 'Unknown error',
+            stack: error instanceof Error ? error.stack : 'No stack trace'
+          });
           return false;
         }
       }
@@ -110,7 +127,9 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/auth/signin",
+    error: "/auth/signin", // Redirect to sign-in page on error
   },
+  debug: process.env.NODE_ENV === "development",
   secret: process.env.NEXTAUTH_SECRET,
 };
 
