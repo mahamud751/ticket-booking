@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { Prisma } from "@prisma/client";
 
 // GET /api/admin/analytics - Get analytics data
 export async function GET(request: NextRequest) {
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const period = searchParams.get("period") || "today"; // today, week, month, year
+    const period = searchParams.get("period") || "today";
     const operatorId = searchParams.get("operatorId");
 
     const now = new Date();
@@ -40,18 +41,23 @@ export async function GET(request: NextRequest) {
         startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     }
 
-    const where: Record<string, unknown> = {
-      bookingDate: {
+    // Build where clause for bookings
+    const bookingWhere: Prisma.BookingWhereInput = {
+      createdAt: {
         gte: startDate,
         lte: endDate,
       },
     };
 
     if (operatorId) {
-      where.schedule = {
+      bookingWhere.schedule = {
         operatorId,
       };
     }
+
+    // First check if we have any bookings at all
+    const allBookingsCount = await prisma.booking.count();
+    console.log(`Total bookings in database: ${allBookingsCount}`);
 
     // Get booking statistics
     const [
@@ -61,26 +67,28 @@ export async function GET(request: NextRequest) {
       pendingBookings,
       cancelledBookings,
     ] = await Promise.all([
-      prisma.booking.count({ where }),
+      prisma.booking.count({ where: bookingWhere }),
       prisma.booking.count({
-        where: { ...where, status: "CONFIRMED" },
+        where: { ...bookingWhere, status: "CONFIRMED" },
       }),
       prisma.booking.aggregate({
-        where: { ...where, status: "CONFIRMED" },
+        where: { ...bookingWhere, status: "CONFIRMED" },
         _sum: { totalAmount: true },
       }),
       prisma.booking.count({
-        where: { ...where, status: "PENDING" },
+        where: { ...bookingWhere, status: "PENDING" },
       }),
       prisma.booking.count({
-        where: { ...where, status: "CANCELLED" },
+        where: { ...bookingWhere, status: "CANCELLED" },
       }),
     ]);
+
+    console.log(`Bookings in period ${period}:`, { totalBookings, confirmedBookings, pendingBookings, cancelledBookings });
 
     // Get top routes
     const topRoutes = await prisma.booking.groupBy({
       by: ["scheduleId"],
-      where: { ...where, status: "CONFIRMED" },
+      where: { ...bookingWhere, status: "CONFIRMED" },
       _count: { id: true },
       _sum: { totalAmount: true },
       orderBy: { _count: { id: "desc" } },
@@ -125,7 +133,7 @@ export async function GET(request: NextRequest) {
     // Get operator statistics
     const operatorStats = await prisma.booking.groupBy({
       by: ["scheduleId"],
-      where: { ...where, status: "CONFIRMED" },
+      where: { ...bookingWhere, status: "CONFIRMED" },
       _count: { id: true },
       _sum: { totalAmount: true },
     });
@@ -181,17 +189,32 @@ export async function GET(request: NextRequest) {
       )
       .sort((a, b) => b.revenue - a.revenue);
 
-    // Get daily booking trends (for charts)
-    const dailyBookings = await prisma.$queryRaw`
-      SELECT 
-        DATE(booking_date) as date,
-        COUNT(*) as bookings,
-        SUM(CASE WHEN status = 'CONFIRMED' THEN total_amount ELSE 0 END) as revenue
-      FROM "Booking"
-      WHERE booking_date >= ${startDate} AND booking_date <= ${endDate}
-      GROUP BY DATE(booking_date)
-      ORDER BY date ASC
-    `;
+    // Get daily booking trends using simpler query
+    const dailyBookingsData = await prisma.booking.findMany({
+      where: bookingWhere,
+      select: {
+        createdAt: true,
+        status: true,
+        totalAmount: true,
+      },
+    });
+
+    // Process daily trends in JavaScript to avoid SQL issues
+    const dailyTrends = dailyBookingsData.reduce((acc: Record<string, { bookings: number; revenue: number }>, booking) => {
+      const date = booking.createdAt.toISOString().split('T')[0];
+      if (!acc[date]) {
+        acc[date] = { bookings: 0, revenue: 0 };
+      }
+      acc[date].bookings += 1;
+      if (booking.status === 'CONFIRMED') {
+        acc[date].revenue += booking.totalAmount;
+      }
+      return acc;
+    }, {});
+
+    const formattedDailyBookings = Object.entries(dailyTrends)
+      .map(([date, data]) => ({ date, ...data }))
+      .sort((a, b) => a.date.localeCompare(b.date));
 
     return NextResponse.json({
       success: true,
@@ -207,7 +230,7 @@ export async function GET(request: NextRequest) {
         },
         topRoutes: topRoutesWithDetails,
         operatorStats: operatorStatsWithDetails,
-        dailyTrends: dailyBookings,
+        dailyTrends: formattedDailyBookings,
         period: {
           startDate: startDate.toISOString(),
           endDate: endDate.toISOString(),

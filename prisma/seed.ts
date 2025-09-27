@@ -173,10 +173,11 @@ async function main() {
 
   console.log("✅ Created routes");
 
-  // Create schedules for the next 7 days
+  // Create schedules for the next 7 days for ALL routes
   const schedules = [];
-  for (const route of routes.slice(0, 20)) {
-    // Limit to first 20 routes for demo
+  console.log(`Creating schedules for ${routes.length} routes over next 7 days...`);
+  
+  for (const route of routes) { // Generate for ALL routes, not just first 20
     const routeBuses = buses.filter(
       (bus) => bus.operatorId === route.operatorId
     );
@@ -184,12 +185,19 @@ async function main() {
     for (let day = 0; day < 7; day++) {
       const date = new Date();
       date.setDate(date.getDate() + day);
+      date.setHours(0, 0, 0, 0); // Reset to start of day
 
-      // Create 3 schedules per day per route
-      for (let scheduleIndex = 0; scheduleIndex < 3; scheduleIndex++) {
-        const departureHour = 6 + scheduleIndex * 6; // 6 AM, 12 PM, 6 PM
+      // Create 3 schedules per day per route (morning, afternoon, evening)
+      const scheduleTimes = [
+        { hour: 6, minute: 0 },   // 6:00 AM
+        { hour: 12, minute: 30 }, // 12:30 PM  
+        { hour: 18, minute: 0 }   // 6:00 PM
+      ];
+      
+      for (let scheduleIndex = 0; scheduleIndex < scheduleTimes.length; scheduleIndex++) {
+        const { hour, minute } = scheduleTimes[scheduleIndex];
         const departureTime = new Date(date);
-        departureTime.setHours(departureHour, 0, 0, 0);
+        departureTime.setHours(hour, minute, 0, 0);
 
         const arrivalTime = new Date(departureTime);
         arrivalTime.setMinutes(arrivalTime.getMinutes() + route.duration);
@@ -203,11 +211,11 @@ async function main() {
             operatorId: route.operatorId,
             departureTime,
             arrivalTime,
-            basePrice: Math.floor(Math.random() * 500 + 200), // Base price between $2-$7
+            basePrice: Math.floor(Math.random() * 500 + 200), // Base price between 200-700
           },
         });
 
-        // Create pricing tiers
+        // Create pricing tiers for this schedule
         await prisma.pricingTier.createMany({
           data: [
             {
@@ -218,7 +226,7 @@ async function main() {
             {
               scheduleId: schedule.id,
               seatType: SeatType.PREMIUM,
-              price: schedule.basePrice * 1.5,
+              price: Math.floor(schedule.basePrice * 1.5),
             },
           ],
         });
@@ -228,16 +236,17 @@ async function main() {
     }
   }
 
-  console.log("✅ Created schedules and pricing tiers");
+  console.log("✅ Created schedules, pricing tiers, and seats for all routes");
 
   console.log("🎉 Database seeded successfully!");
   console.log(`
 📊 Summary:
 - Cities: ${cities.length}
 - Operators: ${operators.length}
-- Buses: ${buses.length}
+- Buses: ${buses.length} (each with 40 seat layouts)
 - Routes: ${routes.length}
-- Schedules: ${schedules.length}
+- Schedules: ${schedules.length} (for next 7 days - 3 schedules per day per route)
+- Total Available Seats: ${schedules.length * 40} (40 seats available per schedule)
 - Admin User: admin@busticketing.com (password: admin123)
   `);
 }

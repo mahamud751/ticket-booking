@@ -13,6 +13,20 @@ const scheduleCreateSchema = z.object({
   isActive: z.boolean().default(true),
 });
 
+const scheduleUpdateSchema = z.object({
+  id: z.string().min(1),
+  routeId: z.string().min(1).optional(),
+  busId: z.string().min(1).optional(),
+  departureTime: z.string().optional(),
+  arrivalTime: z.string().optional(),
+  basePrice: z.number().min(0).optional(),
+  isActive: z.boolean().optional(),
+});
+
+const scheduleDeleteSchema = z.object({
+  id: z.string().min(1),
+});
+
 // GET /api/admin/schedules - List all schedules
 export async function GET(request: NextRequest) {
   try {
@@ -37,7 +51,20 @@ export async function GET(request: NextRequest) {
     if (operatorId) where.operatorId = operatorId;
     if (status) where.isActive = status === "active";
 
-    const [schedules, total] = await Promise.all([
+    // Get total statistics for all schedules (regardless of filters)
+    const [totalCount, totalActive, totalBookings, averagePriceResult] = await Promise.all([
+      prisma.schedule.count(),
+      prisma.schedule.count({ where: { isActive: true } }),
+      prisma.booking.count(),
+      prisma.schedule.aggregate({
+        _avg: { basePrice: true },
+      }),
+    ]);
+
+    const totalPages = Math.ceil(totalCount / limit);
+    const averagePrice = averagePriceResult._avg.basePrice || 0;
+
+    const [schedules, filteredTotal] = await Promise.all([
       prisma.schedule.findMany({
         where,
         include: {
@@ -74,8 +101,13 @@ export async function GET(request: NextRequest) {
         pagination: {
           page,
           limit,
-          total,
-          pages: Math.ceil(total / limit),
+          total: totalCount,
+          pages: totalPages,
+        },
+        statistics: {
+          totalActive,
+          totalBookings,
+          averagePrice,
         },
       },
     });
@@ -161,6 +193,229 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Admin schedules POST error:", error);
+
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { success: false, error: "Invalid data", details: error.issues },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      { success: false, error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+// PUT /api/admin/schedules - Update schedule
+export async function PUT(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user || session.user.role !== "ADMIN") {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+    const validatedData = scheduleUpdateSchema.parse(body);
+
+    // Check if schedule exists
+    const existingSchedule = await prisma.schedule.findUnique({
+      where: { id: validatedData.id },
+    });
+
+    if (!existingSchedule) {
+      return NextResponse.json(
+        { success: false, error: "Schedule not found" },
+        { status: 404 }
+      );
+    }
+
+    // Check for existing bookings if trying to deactivate
+    if (validatedData.isActive === false) {
+      const activeBookings = await prisma.booking.count({
+        where: {
+          scheduleId: validatedData.id,
+          status: { in: ["PENDING", "CONFIRMED"] },
+        },
+      });
+
+      if (activeBookings > 0) {
+        return NextResponse.json(
+          { success: false, error: "Cannot deactivate schedule with active bookings" },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Prepare update data
+    const updateData: Record<string, unknown> = {};
+    if (validatedData.routeId) {
+      const route = await prisma.route.findUnique({
+        where: { id: validatedData.routeId },
+      });
+      if (!route) {
+        return NextResponse.json(
+          { success: false, error: "Route not found" },
+          { status: 404 }
+        );
+      }
+      updateData.routeId = validatedData.routeId;
+      updateData.operatorId = route.operatorId;
+    }
+    if (validatedData.busId) {
+      const bus = await prisma.bus.findUnique({
+        where: { id: validatedData.busId },
+      });
+      if (!bus) {
+        return NextResponse.json(
+          { success: false, error: "Bus not found" },
+          { status: 404 }
+        );
+      }
+      updateData.busId = validatedData.busId;
+    }
+    if (validatedData.departureTime) {
+      updateData.departureTime = new Date(validatedData.departureTime);
+    }
+    if (validatedData.arrivalTime) {
+      updateData.arrivalTime = new Date(validatedData.arrivalTime);
+    }
+    if (validatedData.basePrice !== undefined) {
+      updateData.basePrice = validatedData.basePrice;
+    }
+    if (validatedData.isActive !== undefined) {
+      updateData.isActive = validatedData.isActive;
+    }
+
+    // Update schedule
+    const updatedSchedule = await prisma.schedule.update({
+      where: { id: validatedData.id },
+      data: updateData,
+      include: {
+        route: {
+          include: {
+            origin: true,
+            destination: true,
+          },
+        },
+        bus: true,
+        operator: true,
+        pricingTiers: true,
+      },
+    });
+
+    // Update pricing tiers if base price changed
+    if (validatedData.basePrice !== undefined) {
+      await prisma.pricingTier.updateMany({
+        where: {
+          scheduleId: validatedData.id,
+          seatType: "REGULAR",
+        },
+        data: {
+          price: validatedData.basePrice,
+        },
+      });
+
+      await prisma.pricingTier.updateMany({
+        where: {
+          scheduleId: validatedData.id,
+          seatType: "PREMIUM",
+        },
+        data: {
+          price: validatedData.basePrice * 1.5,
+        },
+      });
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: updatedSchedule,
+    });
+  } catch (error) {
+    console.error("Admin schedules PUT error:", error);
+
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { success: false, error: "Invalid data", details: error.issues },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      { success: false, error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE /api/admin/schedules - Delete schedule
+export async function DELETE(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user || session.user.role !== "ADMIN") {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+    const validatedData = scheduleDeleteSchema.parse(body);
+
+    // Check if schedule exists
+    const existingSchedule = await prisma.schedule.findUnique({
+      where: { id: validatedData.id },
+      include: {
+        bookings: {
+          select: {
+            id: true,
+            status: true,
+          },
+        },
+      },
+    });
+
+    if (!existingSchedule) {
+      return NextResponse.json(
+        { success: false, error: "Schedule not found" },
+        { status: 404 }
+      );
+    }
+
+    // Check for existing bookings
+    const activeBookings = existingSchedule.bookings.filter(
+      (booking) => booking.status === "PENDING" || booking.status === "CONFIRMED"
+    );
+
+    if (activeBookings.length > 0) {
+      return NextResponse.json(
+        { success: false, error: "Cannot delete schedule with active bookings" },
+        { status: 400 }
+      );
+    }
+
+    // Delete related pricing tiers first
+    await prisma.pricingTier.deleteMany({
+      where: { scheduleId: validatedData.id },
+    });
+
+    // Delete the schedule
+    await prisma.schedule.delete({
+      where: { id: validatedData.id },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: "Schedule deleted successfully",
+    });
+  } catch (error) {
+    console.error("Admin schedules DELETE error:", error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
