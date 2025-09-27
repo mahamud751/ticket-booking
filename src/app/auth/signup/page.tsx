@@ -108,29 +108,29 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 flex items-center justify-center py-4 sm:py-8 md:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-4 sm:space-y-6 md:space-y-8">
         {/* Logo */}
         <div className="text-center">
-          <div className="mx-auto h-16 w-16 bg-white rounded-full flex items-center justify-center">
-            <MapPin className="h-8 w-8 text-blue-600" />
+          <div className="mx-auto h-12 w-12 sm:h-16 sm:w-16 bg-white rounded-full flex items-center justify-center">
+            <MapPin className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-white">
+          <h2 className="mt-3 sm:mt-4 md:mt-6 text-xl sm:text-2xl md:text-3xl font-bold text-white">
             Create your account
           </h2>
-          <p className="mt-2 text-blue-100">
+          <p className="mt-2 text-sm sm:text-base text-blue-100">
             Join thousands of travelers booking bus tickets
           </p>
         </div>
 
-        <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl">
-          <CardHeader className="text-center pb-4">
-            <CardTitle className="text-xl text-gray-900">
+        <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl mx-2 sm:mx-0">
+          <CardHeader className="text-center pb-3 sm:pb-4">
+            <CardTitle className="text-lg sm:text-xl text-gray-900">
               Sign up for BusTicket
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
               {/* Name Input */}
               <div>
                 <Label htmlFor="name" className="text-gray-700 font-medium">
@@ -145,7 +145,7 @@ export default function SignUpPage() {
                     required
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="pl-10 h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    className="pl-10 h-11 sm:h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-base touch-manipulation"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -165,7 +165,7 @@ export default function SignUpPage() {
                     required
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="pl-10 h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    className="pl-10 h-11 sm:h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-base touch-manipulation"
                     placeholder="Enter your email"
                   />
                 </div>
@@ -185,7 +185,7 @@ export default function SignUpPage() {
                     required
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="pl-10 h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    className="pl-10 h-11 sm:h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-base touch-manipulation"
                     placeholder="Enter your phone number"
                   />
                 </div>
@@ -211,7 +211,7 @@ export default function SignUpPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 touch-manipulation p-1"
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -245,7 +245,7 @@ export default function SignUpPage() {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 touch-manipulation p-1"
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -260,7 +260,7 @@ export default function SignUpPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium"
+                className="w-full h-11 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium text-base touch-manipulation"
               >
                 {isLoading ? "Creating account..." : "Create Account"}
               </Button>
@@ -281,7 +281,7 @@ export default function SignUpPage() {
             <Button
               variant="outline"
               onClick={handleGoogleSignUp}
-              className="w-full h-12"
+              className="w-full h-11 sm:h-12 text-base touch-manipulation"
             >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                 <path
@@ -307,7 +307,7 @@ export default function SignUpPage() {
             <div className="text-center">
               <button
                 onClick={() => router.push("/")}
-                className="text-blue-600 hover:text-blue-800 text-sm"
+                className="text-blue-600 hover:text-blue-800 text-sm touch-manipulation p-2"
               >
                 ← Back to Home
               </button>
@@ -315,12 +315,12 @@ export default function SignUpPage() {
           </CardContent>
         </Card>
 
-        <div className="text-center mt-6">
+        <div className="text-center mt-4 sm:mt-6">
           <p className="text-blue-100 text-sm">
             Already have an account?{" "}
             <button
               onClick={() => router.push("/auth/signin")}
-              className="text-white hover:underline font-medium"
+              className="text-white hover:underline font-medium touch-manipulation p-1"
             >
               Sign in here
             </button>

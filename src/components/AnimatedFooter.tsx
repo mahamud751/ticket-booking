@@ -152,7 +152,7 @@ export default function AnimatedFooter() {
                 <MapPin className="h-8 w-8 text-blue-400" />
               </motion.div>
               <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                BusTicket
+                2025 Bus Ticket
               </h3>
             </div>
             <p className="text-gray-300 leading-relaxed">
@@ -180,9 +180,9 @@ export default function AnimatedFooter() {
             <ul className="space-y-2">
               {[
                 { name: "Home", href: "/" },
-                { name: "Search Routes", href: "/" },
+                { name: "Search Routes", href: "/search" },
                 { name: "My Bookings", href: "/my-bookings" },
-                { name: "Support", href: "#" },
+                { name: "Contact: +8801789999751", href: "tel:+8801789999751" },
                 { name: "About Us", href: "#" },
               ].map((link, index) => (
                 <motion.li
@@ -246,7 +246,7 @@ export default function AnimatedFooter() {
                 whileHover={{ scale: 1.05 }}
               >
                 <Phone className="h-5 w-5 text-green-400" />
-                <span>+880 1234-567890</span>
+                <a href="tel:+8801789999751" className="hover:text-green-300 transition-colors">+8801789999751</a>
               </motion.div>
               <motion.div
                 className="flex items-center space-x-2 text-gray-300"
@@ -275,7 +275,7 @@ export default function AnimatedFooter() {
           className="mt-12 pt-8 border-t border-gray-700 flex flex-col md:flex-row justify-between items-center"
         >
           <div className="text-gray-400 text-sm mb-4 md:mb-0">
-            © 2024 BusTicket. All rights reserved.
+            © 2025 Bus Ticket. All rights reserved.
           </div>
           <div className="flex space-x-6 text-sm">
             {["Privacy Policy", "Terms of Service", "Cookie Policy"].map(

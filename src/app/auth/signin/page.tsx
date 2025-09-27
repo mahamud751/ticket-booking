@@ -58,29 +58,29 @@ function SignInForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-purple-800 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-purple-800 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div className="w-full max-w-md mx-auto">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full mb-4">
-            <MapPin className="h-8 w-8 text-blue-600" />
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-white rounded-full mb-3 sm:mb-4">
+            <MapPin className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
           </div>
-          <h1 className="text-2xl font-bold text-white">BusTicket</h1>
-          <p className="text-blue-100">Sign in to your account</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-white">BusTicket</h1>
+          <p className="text-sm sm:text-base text-blue-100">Sign in to your account</p>
         </div>
 
         {/* Sign In Form */}
-        <Card className="bg-white/95 backdrop-blur-sm shadow-2xl">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Welcome Back</CardTitle>
-            <p className="text-gray-600">
+        <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border-0">
+          <CardHeader className="text-center px-4 sm:px-6 pt-6 pb-4">
+            <CardTitle className="text-xl sm:text-2xl">Welcome Back</CardTitle>
+            <p className="text-sm sm:text-base text-gray-600">
               Enter your credentials to access your account
             </p>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <Label htmlFor="email" className="text-gray-700">
+                <Label htmlFor="email" className="text-sm sm:text-base text-gray-700">
                   Email Address
                 </Label>
                 <div className="relative mt-1">
@@ -96,14 +96,14 @@ function SignInForm() {
                       }))
                     }
                     placeholder="Enter your email"
-                    className="pl-10 h-12"
+                    className="pl-10 h-11 sm:h-12 text-sm sm:text-base"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="password" className="text-gray-700">
+                <Label htmlFor="password" className="text-sm sm:text-base text-gray-700">
                   Password
                 </Label>
                 <div className="relative mt-1">
@@ -119,13 +119,13 @@ function SignInForm() {
                       }))
                     }
                     placeholder="Enter your password"
-                    className="pl-10 pr-10 h-12"
+                    className="pl-10 pr-10 h-11 sm:h-12 text-sm sm:text-base"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 touch-manipulation"
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -139,7 +139,7 @@ function SignInForm() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                className="w-full h-11 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm sm:text-base touch-manipulation"
               >
                 {isLoading ? (
                   <div className="flex items-center">
@@ -167,7 +167,7 @@ function SignInForm() {
             <Button
               variant="outline"
               onClick={handleGoogleSignIn}
-              className="w-full h-12"
+              className="w-full h-11 sm:h-12 text-sm sm:text-base touch-manipulation"
             >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                 <path
@@ -191,12 +191,12 @@ function SignInForm() {
             </Button>
 
             {/* Demo Account Info */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="text-sm">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+              <div className="text-xs sm:text-sm">
                 <div className="font-medium text-blue-800 mb-2">
                   Demo Account:
                 </div>
-                <div className="text-blue-700">
+                <div className="text-blue-700 space-y-1">
                   <div>Email: admin@busticketing.com</div>
                   <div>Password: admin123</div>
                 </div>
@@ -206,7 +206,7 @@ function SignInForm() {
             <div className="text-center">
               <button
                 onClick={() => router.push("/")}
-                className="text-blue-600 hover:text-blue-800 text-sm"
+                className="text-blue-600 hover:text-blue-800 text-sm touch-manipulation"
               >
                 ← Back to Home
               </button>
@@ -214,12 +214,12 @@ function SignInForm() {
           </CardContent>
         </Card>
 
-        <div className="text-center mt-6">
-          <p className="text-blue-100 text-sm">
+        <div className="text-center mt-4 sm:mt-6">
+          <p className="text-blue-100 text-xs sm:text-sm">
             Don&apos;t have an account?{" "}
             <button
               onClick={() => router.push("/auth/signup")}
-              className="text-white hover:underline font-medium"
+              className="text-white hover:underline font-medium touch-manipulation"
             >
               Sign up here
             </button>
