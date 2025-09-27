@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, MapPin, Settings, Home, Calendar, Search, MessageCircle } from "lucide-react";
+import { User, MapPin, Settings, Home, Calendar, Search, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import AnimatedBus from "./AnimatedBus";
 import React from "react";
@@ -202,12 +202,6 @@ function MobileBottomNav() {
       icon: MessageCircle,
       href: "tel:+8801789999751",
     },
-    {
-      id: "profile",
-      label: "Bookings",
-      icon: User,
-      href: "/my-bookings",
-    },
   ];
 
   const handleNavClick = (item: typeof navItems[0]) => {
@@ -220,6 +214,14 @@ function MobileBottomNav() {
     }
   };
 
+  const handleAuthAction = () => {
+    if (session) {
+      signOut();
+    } else {
+      router.push("/auth/signin");
+    }
+  };
+
   return (
     <motion.nav
       className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 safe-area-pb"
@@ -227,34 +229,50 @@ function MobileBottomNav() {
       animate={{ y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex items-center justify-around py-2 px-2">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeTab === item.id;
-          
-          return (
-            <motion.button
-              key={item.id}
-              onClick={() => handleNavClick(item)}
-              className={`flex flex-col items-center justify-center py-2 px-3 rounded-lg min-w-0 flex-1 touch-manipulation ${
-                isActive 
-                  ? "text-blue-600 bg-blue-50" 
-                  : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
-              }`}
-              whileTap={{ scale: 0.95 }}
-              transition={{ duration: 0.1 }}
-            >
-              <Icon className={`h-5 w-5 mb-1 ${
-                isActive ? "text-blue-600" : "text-gray-600"
-              }`} />
-              <span className={`text-xs font-medium truncate ${
-                isActive ? "text-blue-600" : "text-gray-600"
-              }`}>
-                {item.label}
-              </span>
-            </motion.button>
-          );
-        })}
+      <div className="flex items-center justify-between py-2 px-2">
+        {/* Left side navigation items */}
+        <div className="flex items-center justify-around flex-1">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
+            
+            return (
+              <motion.button
+                key={item.id}
+                onClick={() => handleNavClick(item)}
+                className={`flex flex-col items-center justify-center py-2 px-3 rounded-lg min-w-0 flex-1 touch-manipulation ${
+                  isActive 
+                    ? "text-blue-600 bg-blue-50" 
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+                }`}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.1 }}
+              >
+                <Icon className={`h-5 w-5 mb-1 ${
+                  isActive ? "text-blue-600" : "text-gray-600"
+                }`} />
+                <span className={`text-xs font-medium truncate ${
+                  isActive ? "text-blue-600" : "text-gray-600"
+                }`}>
+                  {item.label}
+                </span>
+              </motion.button>
+            );
+          })}
+        </div>
+        
+        {/* Right side auth button */}
+        <motion.button
+          onClick={handleAuthAction}
+          className="flex flex-col items-center justify-center py-2 px-3 rounded-lg min-w-0 touch-manipulation text-red-600 hover:text-red-700 hover:bg-red-50 ml-2"
+          whileTap={{ scale: 0.95 }}
+          transition={{ duration: 0.1 }}
+        >
+          <User className="h-5 w-5 mb-1" />
+          <span className="text-xs font-medium truncate">
+            {session ? "Sign Out" : "Sign In"}
+          </span>
+        </motion.button>
       </div>
     </motion.nav>
   );
