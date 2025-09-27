@@ -4,7 +4,7 @@ module.exports = {
       name: "bus-ticket",
       script: "npm",
       args: "start",
-      cwd: "/var/www/bus-ticket",
+      cwd: "/root/ticket-booking",
       instances: "max",
       exec_mode: "cluster",
       env: {

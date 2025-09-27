@@ -32,7 +32,7 @@ export interface SocketEvents {
 }
 
 export const useSocket = (scheduleId?: string) => {
-  const socketRef = useRef<typeof io.Socket | null>(null);
+  const socketRef = useRef<ReturnType<typeof io> | null>(null);
 
   useEffect(() => {
     if (!scheduleId) return;
@@ -68,10 +68,7 @@ export const useSocket = (scheduleId?: string) => {
     }
   };
 
-  const on = <T extends keyof SocketEvents>(
-    event: T,
-    callback: SocketEvents[T]
-  ) => {
+  const on = (event: string, callback: (...args: unknown[]) => void) => {
     if (socketRef.current) {
       socketRef.current.on(event, callback);
     }

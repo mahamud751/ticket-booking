@@ -21,6 +21,13 @@ import { toast } from "react-hot-toast";
 import { formatDistance } from "@/lib/utils";
 import { useSocket } from "@/hooks/useSocket";
 
+// Socket event interfaces
+interface SocketEventData {
+  sessionId: string;
+  seatIds: string[];
+  [key: string]: unknown;
+}
+
 interface Seat {
   id: string;
   seatNumber: string;
@@ -140,27 +147,31 @@ export default function BookingSeatSelection({
   // Socket.io event listeners
   useEffect(() => {
     // Listen for real-time seat lock events
-    on("seats-being-locked", (data) => {
+    on("seats-being-locked", (...args) => {
+      const data = args[0] as SocketEventData;
       if (data.sessionId !== sessionId) {
         // Visual feedback - just refresh seat map
         fetchSeatMap();
       }
     });
 
-    on("seats-locked", (data) => {
+    on("seats-locked", (...args) => {
+      const data = args[0] as SocketEventData;
       if (data.sessionId !== sessionId) {
         // Refresh seat map to show new locks
         fetchSeatMap();
       }
     });
 
-    on("seats-unlocked", (data) => {
+    on("seats-unlocked", (...args) => {
+      const data = args[0] as SocketEventData;
       if (data.sessionId !== sessionId) {
         fetchSeatMap();
       }
     });
 
-    on("seats-booked", (data) => {
+    on("seats-booked", (...args) => {
+      const data = args[0] as SocketEventData;
       // Refresh seat map when someone completes booking
       fetchSeatMap();
       toast(
