@@ -78,7 +78,7 @@ async function main() {
 
   console.log("✅ Created admin user");
 
-  // Create operators
+  // Create operators with more variety
   const operators = await Promise.all([
     prisma.operator.upsert({
       where: { name: "Green Line Paribahan" },
@@ -102,6 +102,38 @@ async function main() {
       create: {
         name: "Shyamoli Paribahan",
         contactInfo: "+8801733333333",
+      },
+    }),
+    prisma.operator.upsert({
+      where: { name: "Ena Transport" },
+      update: {},
+      create: {
+        name: "Ena Transport",
+        contactInfo: "+8801744444444",
+      },
+    }),
+    prisma.operator.upsert({
+      where: { name: "Soudia Coach Service" },
+      update: {},
+      create: {
+        name: "Soudia Coach Service",
+        contactInfo: "+8801755555555",
+      },
+    }),
+    prisma.operator.upsert({
+      where: { name: "TR Travels" },
+      update: {},
+      create: {
+        name: "TR Travels",
+        contactInfo: "+8801766666666",
+      },
+    }),
+    prisma.operator.upsert({
+      where: { name: "Eagle Paribahan" },
+      update: {},
+      create: {
+        name: "Eagle Paribahan",
+        contactInfo: "+8801777777777",
       },
     }),
   ]);
@@ -150,34 +182,80 @@ async function main() {
 
   console.log("✅ Created buses and seat layouts");
 
-  // Create routes
+  // Create routes with realistic coverage (not every operator covers every route)
   const routes = [];
+  const cityPairs = [];
+  
+  // Generate all possible city pairs
   for (let i = 0; i < cities.length; i++) {
     for (let j = 0; j < cities.length; j++) {
       if (i !== j) {
-        for (const operator of operators) {
-          const route = await prisma.route.create({
-            data: {
-              operatorId: operator.id,
-              originId: cities[i].id,
-              destinationId: cities[j].id,
-              distance: Math.random() * 300 + 50, // Random distance between 50-350 km
-              duration: Math.floor(Math.random() * 300 + 120), // Random duration between 2-7 hours
-            },
-          });
-          routes.push(route);
-        }
+        cityPairs.push({ origin: cities[i], destination: cities[j] });
+      }
+    }
+  }
+  
+  // Define operator coverage patterns (more realistic)
+  const operatorCoverage: Record<string, number> = {
+    "Green Line Paribahan": 0.9,      // Covers 90% of routes (premium operator)
+    "Hanif Enterprise": 0.8,          // Covers 80% of routes  
+    "Shyamoli Paribahan": 0.7,        // Covers 70% of routes
+    "Ena Transport": 0.6,             // Covers 60% of routes
+    "Soudia Coach Service": 0.5,      // Covers 50% of routes
+    "TR Travels": 0.4,                // Covers 40% of routes (budget)
+    "Eagle Paribahan": 0.3,           // Covers 30% of routes (limited)
+  };
+  
+  for (const { origin, destination } of cityPairs) {
+    for (const operator of operators) {
+      const coverage = operatorCoverage[operator.name] || 0.5;
+      
+      // Randomly decide if this operator covers this route based on coverage
+      if (Math.random() < coverage) {
+        // Calculate realistic distance and duration
+        const baseDistance = Math.random() * 200 + 100; // 100-300 km
+        const distance = Math.round(baseDistance);
+        
+        // Duration based on distance (roughly 50-80 km/h average speed)
+        const baseSpeed = Math.random() * 30 + 50; // 50-80 km/h
+        const duration = Math.round((distance / baseSpeed) * 60); // Convert to minutes
+        
+        const route = await prisma.route.create({
+          data: {
+            operatorId: operator.id,
+            originId: origin.id,
+            destinationId: destination.id,
+            distance,
+            duration,
+          },
+        });
+        routes.push(route);
       }
     }
   }
 
   console.log("✅ Created routes");
 
-  // Create schedules for the next 7 days for ALL routes
+  // Create schedules for the next 7 days with more variety
   const schedules = [];
-  console.log(`Creating schedules for ${routes.length} routes over next 7 days...`);
+  console.log(`Creating varied schedules for ${routes.length} routes over next 7 days...`);
   
-  for (const route of routes) { // Generate for ALL routes, not just first 20
+  // More realistic departure times with variety
+  const baseDepartureTimes = [
+    { hour: 5, minute: 30 },   // Early morning
+    { hour: 6, minute: 15 },   // Morning
+    { hour: 7, minute: 0 },    // Morning rush
+    { hour: 8, minute: 45 },   // Late morning
+    { hour: 10, minute: 30 },  // Mid morning
+    { hour: 12, minute: 0 },   // Noon
+    { hour: 14, minute: 15 },  // Afternoon
+    { hour: 16, minute: 30 },  // Late afternoon
+    { hour: 18, minute: 0 },   // Evening
+    { hour: 20, minute: 15 },  // Night
+    { hour: 22, minute: 30 },  // Late night
+  ];
+  
+  for (const route of routes) {
     const routeBuses = buses.filter(
       (bus) => bus.operatorId === route.operatorId
     );
@@ -185,24 +263,62 @@ async function main() {
     for (let day = 0; day < 7; day++) {
       const date = new Date();
       date.setDate(date.getDate() + day);
-      date.setHours(0, 0, 0, 0); // Reset to start of day
+      date.setHours(0, 0, 0, 0);
 
-      // Create 3 schedules per day per route (morning, afternoon, evening)
-      const scheduleTimes = [
-        { hour: 6, minute: 0 },   // 6:00 AM
-        { hour: 12, minute: 30 }, // 12:30 PM  
-        { hour: 18, minute: 0 }   // 6:00 PM
-      ];
+      // Create varied number of schedules per day (2-5 schedules)
+      const numberOfSchedules = Math.floor(Math.random() * 4) + 2; // 2-5 schedules
       
-      for (let scheduleIndex = 0; scheduleIndex < scheduleTimes.length; scheduleIndex++) {
-        const { hour, minute } = scheduleTimes[scheduleIndex];
+      // Select random departure times for this route/day combination
+      const selectedTimes = [];
+      const availableTimes = [...baseDepartureTimes];
+      
+      for (let i = 0; i < numberOfSchedules && availableTimes.length > 0; i++) {
+        const randomIndex = Math.floor(Math.random() * availableTimes.length);
+        selectedTimes.push(availableTimes.splice(randomIndex, 1)[0]);
+      }
+      
+      // Sort selected times by hour
+      selectedTimes.sort((a, b) => a.hour - b.hour);
+      
+      for (let scheduleIndex = 0; scheduleIndex < selectedTimes.length; scheduleIndex++) {
+        const { hour, minute } = selectedTimes[scheduleIndex];
+        
+        // Add some random variation to minutes (±15 minutes)
+        const variationMinutes = Math.floor(Math.random() * 31) - 15; // -15 to +15
         const departureTime = new Date(date);
-        departureTime.setHours(hour, minute, 0, 0);
+        departureTime.setHours(hour, minute + variationMinutes, 0, 0);
+        
+        // Ensure departure time is not negative
+        if (departureTime.getHours() < 0) {
+          departureTime.setHours(0, 0, 0, 0);
+        }
+        if (departureTime.getHours() >= 24) {
+          departureTime.setHours(23, 59, 0, 0);
+        }
 
         const arrivalTime = new Date(departureTime);
         arrivalTime.setMinutes(arrivalTime.getMinutes() + route.duration);
 
         const bus = routeBuses[scheduleIndex % routeBuses.length];
+        
+        // Add price variation based on time and day
+        let basePriceMultiplier = 1.0;
+        
+        // Weekend pricing (Friday, Saturday slightly higher)
+        const dayOfWeek = departureTime.getDay();
+        if (dayOfWeek === 5 || dayOfWeek === 6) { // Friday or Saturday
+          basePriceMultiplier += 0.15;
+        }
+        
+        // Peak hour pricing
+        const departureHour = departureTime.getHours();
+        if ((departureHour >= 7 && departureHour <= 9) || (departureHour >= 17 && departureHour <= 19)) {
+          basePriceMultiplier += 0.1; // Peak hours
+        } else if (departureHour >= 22 || departureHour <= 5) {
+          basePriceMultiplier -= 0.1; // Late night/early morning discount
+        }
+        
+        const basePrice = Math.floor((Math.random() * 300 + 200) * basePriceMultiplier); // 200-500 with multipliers
 
         const schedule = await prisma.schedule.create({
           data: {
@@ -211,7 +327,7 @@ async function main() {
             operatorId: route.operatorId,
             departureTime,
             arrivalTime,
-            basePrice: Math.floor(Math.random() * 500 + 200), // Base price between 200-700
+            basePrice,
           },
         });
 

@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
+import { withRateLimit } from "@/lib/rate-limit";
 
 const seatLockSchema = z.object({
   scheduleId: z.string().min(1),
@@ -10,7 +11,7 @@ const seatLockSchema = z.object({
   sessionId: z.string().min(1),
 });
 
-export async function POST(request: NextRequest) {
+export const POST = withRateLimit(async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     const body = await request.json();
@@ -152,10 +153,10 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+}, "/api/seats/lock");
 
 // Release seat locks
-export async function DELETE(request: NextRequest) {
+export const DELETE = withRateLimit(async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const sessionId = searchParams.get("sessionId");
@@ -190,4 +191,4 @@ export async function DELETE(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+}, "/api/seats/lock");

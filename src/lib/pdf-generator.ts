@@ -1,5 +1,5 @@
 import jsPDF from "jspdf";
-import QRCode from "qrcode";
+import * as QRCode from "qrcode";
 
 interface BookingData {
   pnr: string;
@@ -157,26 +157,87 @@ export class TicketPDFGenerator {
     doc.setFont("helvetica", "bold");
     doc.text(`Total Amount: $${bookingData.totalAmount}`, 20, yPos + 5);
 
-    // QR Code
+    // QR Code with mobile-optimized data structure
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://busticketing.com';
+    const mobileDownloadUrl = `${baseUrl}/api/qr/download?pnr=${bookingData.pnr}&action=mobile`;
+    
+    // Create a SIMPLIFIED mobile-friendly QR data structure for better scanning reliability
+    // Following memory recommendations: smaller data = better mobile scanning
     const qrData = JSON.stringify({
+      type: "bus-ticket",
       pnr: bookingData.pnr,
-      passenger: bookingData.passengerName,
-      route: `${bookingData.route.origin}-${bookingData.route.destination}`,
+      passenger: bookingData.passengerName.substring(0, 20), // Limit name length
+      route: `${bookingData.route.origin.substring(0, 10)}-${bookingData.route.destination.substring(0, 10)}`,
       departure: bookingData.schedule.departureTime,
       seats: bookingData.seats.map((s) => s.seatNumber).join(","),
+      // Single mobile-optimized URL to reduce data size
+      url: mobileDownloadUrl,
+      // Essential mobile metadata only
+      mobile: {
+        optimized: true
+      }
     });
 
-    try {
-      const qrCodeDataURL = await QRCode.toDataURL(qrData, {
-        width: 100,
-        margin: 1,
-      });
+    // Fallback simple URL for maximum compatibility
+    const fallbackUrl = mobileDownloadUrl;
 
-      doc.addImage(qrCodeDataURL, "PNG", 150, yPos + 20, 40, 40);
+    try {
+      // Try mobile-optimized QR code generation with simplified data first
+      let qrCodeDataURL: string;
+      
+      try {
+        // Primary attempt: JSON data with mobile optimization
+        qrCodeDataURL = await QRCode.toDataURL(qrData, {
+          width: 150, // Increased to minimum 150px for reliable mobile scanning
+          margin: 4,  // Increased margin for better mobile camera detection
+          color: {
+            dark: "#000000", // Pure black for maximum contrast
+            light: "#FFFFFF" // Pure white background
+          },
+          errorCorrectionLevel: 'M', // 'M' level error correction as per memory specs
+          type: 'image/png'
+        });
+      } catch (jsonError) {
+        console.log("JSON QR generation failed, using simple URL fallback:", jsonError);
+        // Fallback: Use simple URL for maximum mobile compatibility
+        qrCodeDataURL = await QRCode.toDataURL(fallbackUrl, {
+          width: 150,
+          margin: 4,
+          color: {
+            dark: "#000000",
+            light: "#FFFFFF"
+          },
+          errorCorrectionLevel: 'M',
+          type: 'image/png'
+        });
+      }
+
+      // QR Code background with maximum contrast for mobile scanning
+      doc.setFillColor(255, 255, 255); // Pure white background
+      doc.rect(135, yPos + 10, 70, 80, "F");
+      
+      // Add border for better QR code definition and mobile detection
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(1.0); // Thicker border for better mobile detection
+      doc.rect(138, yPos + 13, 64, 64, "S");
+      
+      // Larger QR code following memory specs: minimum 120x120 pixels, using 60x60 points
+      // (PDF points to pixels: 60 points ≈ 150 pixels at 150 DPI)
+      doc.addImage(qrCodeDataURL, "PNG", 140, yPos + 15, 60, 60);
 
       doc.setFontSize(10);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(0, 0, 0); // Black text for better readability
+      doc.text("📱 Scan with Mobile", 148, yPos + 82);
+      
+      doc.setFontSize(8);
       doc.setFont("helvetica", "normal");
-      doc.text("Scan QR code for verification", 145, yPos + 65);
+      doc.setTextColor(100, 116, 139);
+      doc.text("Mobile Optimized QR", 152, yPos + 88);
+      
+      doc.setFontSize(7);
+      doc.setTextColor(80, 80, 80);
+      doc.text("High contrast • Error correction", 142, yPos + 93);
     } catch (error) {
       console.error("Error generating QR code:", error);
     }
@@ -194,6 +255,8 @@ export class TicketPDFGenerator {
       "• Please arrive at the departure point at least 30 minutes before departure",
       "• Carry a valid photo ID along with this ticket",
       "• This ticket is non-transferable and non-refundable",
+      "• Scan the QR code with your mobile device for instant access and validation",
+      "• QR code is optimized for mobile scanning with high contrast and error correction",
       "• Contact support for any queries with your PNR",
     ];
 

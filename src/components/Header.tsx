@@ -5,7 +5,9 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { User, MapPin, Settings, Home, Calendar, Search, MessageCircle } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { LanguageToggle } from "@/components/LanguageToggle";
+import { User, MapPin, Settings, Home, Calendar, Search, MessageCircle, QrCode } from "lucide-react";
 import { motion } from "framer-motion";
 import AnimatedBus from "./AnimatedBus";
 import React from "react";
@@ -16,7 +18,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="bg-white shadow-lg border-b relative z-10">
+      <header className="bg-white dark:bg-gray-900 shadow-lg border-b dark:border-gray-700 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -49,25 +51,32 @@ export default function Header() {
               <div className="ml-10 flex items-baseline space-x-4">
                 <Link
                   href="/"
-                  className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   Home
                 </Link>
                 <Link
                   href="/"
-                  className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   Routes
                 </Link>
                 <Link
                   href="/my-bookings"
-                  className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   My Bookings
                 </Link>
                 <Link
+                  href="/qr-scanner"
+                  className="text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center"
+                >
+                  <QrCode className="h-4 w-4 mr-1" />
+                  QR Scanner
+                </Link>
+                <Link
                   href="/"
-                  className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   Support
                 </Link>
@@ -76,7 +85,9 @@ export default function Header() {
 
             {/* User Actions */}
             <div className="hidden md:block">
-              <div className="ml-4 flex items-center md:ml-6">
+              <div className="ml-4 flex items-center md:ml-6 space-x-2">
+                <LanguageToggle />
+                <ThemeToggle />
                 {status === "loading" ? (
                   <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
                 ) : session ? (
@@ -91,7 +102,7 @@ export default function Header() {
                         Admin
                       </Button>
                     )}
-                    <span className="text-sm text-gray-700">
+                    <span className="text-sm text-gray-700 dark:text-gray-300">
                       Hello, {session.user.name?.split(" ")[0]}
                     </span>
                     <Button variant="ghost" size="sm" onClick={() => signOut()}>
@@ -173,6 +184,7 @@ function MobileBottomNav() {
       if (path === '/') setActiveTab('home');
       else if (path === '/search') setActiveTab('search');
       else if (path === '/my-bookings') setActiveTab('bookings');
+      else if (path === '/qr-scanner') setActiveTab('qr-scanner');
       else if (path.includes('/auth')) setActiveTab('profile');
     }
   }, []);
@@ -195,6 +207,12 @@ function MobileBottomNav() {
       label: "Bookings",
       icon: Calendar,
       href: "/my-bookings",
+    },
+    {
+      id: "qr-scanner",
+      label: "QR Scan",
+      icon: QrCode,
+      href: "/qr-scanner",
     },
     {
       id: "support",
@@ -224,7 +242,7 @@ function MobileBottomNav() {
 
   return (
     <motion.nav
-      className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 safe-area-pb"
+      className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 z-50 safe-area-pb"
       initial={{ y: 100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.3 }}

@@ -18,6 +18,8 @@ import {
 import { toast } from "react-hot-toast";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { CityAutoComplete, extendedCities } from "@/components/ui/autocomplete";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 interface SearchFormData {
   origin: string;
@@ -26,23 +28,18 @@ interface SearchFormData {
   passengers: number;
 }
 
-const cities = [
-  { code: "DHK", name: "Dhaka" },
-  { code: "CTG", name: "Chittagong" },
-  { code: "SYL", name: "Sylhet" },
-  { code: "RAJ", name: "Rajshahi" },
-  { code: "KHL", name: "Khulna" },
-];
+// Using extendedCities from autocomplete component for consistency
 
 export default function HeroSection() {
   const router = useRouter();
   const ref = useRef(null);
   const isInView = useInView(ref);
+  const { t } = useLanguage();
 
   const [searchData, setSearchData] = useState<SearchFormData>({
     origin: "",
     destination: "",
-    departureDate: "",
+    departureDate: new Date().toISOString().split("T")[0], // Set to today by default
     passengers: 1,
   });
 
@@ -63,6 +60,16 @@ export default function HeroSection() {
 
     if (searchData.origin === searchData.destination) {
       toast.error("Origin and destination cannot be the same");
+      return;
+    }
+
+    // Validate departure date is not in the past
+    const selectedDate = new Date(searchData.departureDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day for comparison
+    
+    if (selectedDate < today) {
+      toast.error("Departure date cannot be in the past. Please select today or a future date.");
       return;
     }
 
@@ -263,7 +270,7 @@ export default function HeroSection() {
           }
           transition={{ duration: 0.8, delay: 1.2 }}
         >
-          <Card className="max-w-5xl mx-auto shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
+          <Card className="max-w-5xl mx-auto shadow-2xl border-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">
             <CardContent className="p-8">
               <form onSubmit={handleSearch} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -275,31 +282,23 @@ export default function HeroSection() {
                   >
                     <Label
                       htmlFor="origin"
-                      className="text-gray-700 font-medium flex items-center"
+                      className="text-gray-700 dark:text-gray-300 font-medium flex items-center"
                     >
                       <MapPin className="h-4 w-4 mr-2 text-blue-600" />
-                      From
+                      {t('search.from')}
                     </Label>
-                    <motion.select
-                      id="origin"
+                    <CityAutoComplete
                       value={searchData.origin}
-                      onChange={(e) =>
+                      onValueChange={(value) =>
                         setSearchData((prev) => ({
                           ...prev,
-                          origin: e.target.value,
+                          origin: value,
                         }))
                       }
-                      className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 text-lg transition-all duration-200 hover:border-blue-400"
-                      required
-                      whileFocus={{ scale: 1.02 }}
-                    >
-                      <option value="">Select Origin</option>
-                      {cities.map((city) => (
-                        <option key={city.code} value={city.code}>
-                          {city.name}
-                        </option>
-                      ))}
-                    </motion.select>
+                      cities={extendedCities}
+                      placeholder={t('search.origin_placeholder')}
+                      className="w-full"
+                    />
                   </motion.div>
 
                   {/* Swap Button */}
@@ -333,33 +332,23 @@ export default function HeroSection() {
                   >
                     <Label
                       htmlFor="destination"
-                      className="text-gray-700 font-medium flex items-center"
+                      className="text-gray-700 dark:text-gray-300 font-medium flex items-center"
                     >
                       <MapPin className="h-4 w-4 mr-2 text-red-600" />
-                      To
+                      {t('search.to')}
                     </Label>
-                    <motion.select
-                      id="destination"
+                    <CityAutoComplete
                       value={searchData.destination}
-                      onChange={(e) =>
+                      onValueChange={(value) =>
                         setSearchData((prev) => ({
                           ...prev,
-                          destination: e.target.value,
+                          destination: value,
                         }))
                       }
-                      className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 text-lg transition-all duration-200 hover:border-blue-400"
-                      required
-                      whileFocus={{ scale: 1.02 }}
-                    >
-                      <option value="">Select Destination</option>
-                      {cities
-                        .filter((city) => city.code !== searchData.origin)
-                        .map((city) => (
-                          <option key={city.code} value={city.code}>
-                            {city.name}
-                          </option>
-                        ))}
-                    </motion.select>
+                      cities={extendedCities.filter((city) => city.code !== searchData.origin)}
+                      placeholder={t('search.destination_placeholder')}
+                      className="w-full"
+                    />
                   </motion.div>
 
                   {/* Date */}
@@ -381,12 +370,21 @@ export default function HeroSection() {
                         type="date"
                         value={searchData.departureDate}
                         min={new Date().toISOString().split("T")[0]}
-                        onChange={(e) =>
-                          setSearchData((prev) => ({
-                            ...prev,
-                            departureDate: e.target.value,
-                          }))
-                        }
+                        max={new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]} // 1 year from now
+                        onChange={(e) => {
+                          const selectedDate = new Date(e.target.value);
+                          const today = new Date();
+                          today.setHours(0, 0, 0, 0);
+                          
+                          if (selectedDate >= today) {
+                            setSearchData((prev) => ({
+                              ...prev,
+                              departureDate: e.target.value,
+                            }));
+                          } else {
+                            toast.error("Please select today or a future date");
+                          }
+                        }}
                         className="h-12 text-lg transition-all duration-200 hover:border-blue-400"
                         required
                       />

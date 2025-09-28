@@ -167,11 +167,11 @@ export async function POST(request: NextRequest) {
 
     // Create booking in database
     const booking = await prisma.$transaction(async (tx) => {
-      // Create booking record
+      // Create booking record with optional userId for guest bookings
       const newBooking = await tx.booking.create({
         data: {
           pnr,
-          userId: session?.user?.id || "guest",
+          userId: session?.user?.id || null, // Allow null for guest bookings
           scheduleId,
           passengerName: passengerInfo.name,
           passengerPhone: passengerInfo.phone,

@@ -86,9 +86,20 @@ export default function BookingConfirmationPage() {
   const params = useParams();
   const router = useRouter();
   const pnr = params?.pnr as string;
+  
+  // Check if this is a mobile request
+  const [isMobileView, setIsMobileView] = useState(false);
 
   const [booking, setBooking] = useState<BookingDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Check for mobile parameter on mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const mobileParam = urlParams.get('mobile');
+    const isMobileDevice = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent);
+    setIsMobileView(mobileParam === 'true' || isMobileDevice);
+  }, []);
 
   // Normalize booking data to ensure all required properties exist
   const normalizeBookingData = (bookingData: unknown): BookingDetails => {
@@ -340,38 +351,54 @@ export default function BookingConfirmationPage() {
       <Header />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Success Header */}
+        {/* Success Header - Mobile optimized */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
             <CheckCircle className="h-8 w-8 text-green-600" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className={`font-bold text-gray-900 mb-2 ${isMobileView ? 'text-2xl' : 'text-3xl'}`}>
             Booking Confirmed!
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className={`text-gray-600 ${isMobileView ? 'text-base' : 'text-lg'}`}>
             Your bus ticket has been successfully booked
           </p>
           <div className="mt-4">
-            <Badge variant="outline" className="text-lg px-4 py-2">
+            <Badge variant="outline" className={`px-4 py-2 ${isMobileView ? 'text-base' : 'text-lg'}`}>
               PNR: {booking.pnr}
             </Badge>
           </div>
+          {isMobileView && (
+            <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <p className="text-sm text-blue-700">
+                📱 <strong>Mobile View:</strong> Optimized for your device. 
+                Tap actions below or use the QR scanner for validation.
+              </p>
+            </div>
+          )}
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-wrap justify-center gap-4 mb-8">
+        {/* Action Buttons - Mobile optimized layout */}
+        <div className={`flex flex-wrap justify-center gap-4 mb-8 ${isMobileView ? 'flex-col' : ''}`}>
           <Button
             onClick={handleDownloadTicket}
-            className="bg-blue-600 hover:bg-blue-700"
+            className={`bg-blue-600 hover:bg-blue-700 ${isMobileView ? 'w-full text-base py-3' : ''}`}
           >
             <Download className="h-4 w-4 mr-2" />
             Download Ticket
           </Button>
-          <Button variant="outline" onClick={handlePrintTicket}>
+          <Button 
+            variant="outline" 
+            onClick={handlePrintTicket}
+            className={isMobileView ? 'w-full text-base py-3' : ''}
+          >
             <Printer className="h-4 w-4 mr-2" />
             Print Ticket
           </Button>
-          <Button variant="outline" onClick={handleShareBooking}>
+          <Button 
+            variant="outline" 
+            onClick={handleShareBooking}
+            className={isMobileView ? 'w-full text-base py-3' : ''}
+          >
             <Share2 className="h-4 w-4 mr-2" />
             Share Booking
           </Button>
