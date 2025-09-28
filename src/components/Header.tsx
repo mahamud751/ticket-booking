@@ -56,12 +56,6 @@ export default function Header() {
                   Home
                 </Link>
                 <Link
-                  href="/"
-                  className="text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Routes
-                </Link>
-                <Link
                   href="/my-bookings"
                   className="text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
@@ -75,7 +69,7 @@ export default function Header() {
                   QR Scanner
                 </Link>
                 <Link
-                  href="/"
+                  href="/support"
                   className="text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   Support
@@ -184,6 +178,7 @@ function MobileBottomNav() {
       if (path === '/') setActiveTab('home');
       else if (path === '/search') setActiveTab('search');
       else if (path === '/my-bookings') setActiveTab('bookings');
+      else if (path === '/support') setActiveTab('support');
       else if (path === '/qr-scanner') setActiveTab('qr-scanner');
       else if (path.includes('/auth')) setActiveTab('profile');
     }
@@ -218,18 +213,13 @@ function MobileBottomNav() {
       id: "support",
       label: "Support",
       icon: MessageCircle,
-      href: "tel:+8801789999751",
+      href: "/support",
     },
   ];
 
   const handleNavClick = (item: typeof navItems[0]) => {
     setActiveTab(item.id);
-    if (item.id === "support") {
-      // For support, make a phone call
-      window.location.href = "tel:+8801789999751";
-    } else {
-      router.push(item.href);
-    }
+    router.push(item.href);
   };
 
   const handleAuthAction = () => {
