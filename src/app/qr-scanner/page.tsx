@@ -271,10 +271,10 @@ export default function QRScannerPage() {
           if (targetUrl) {
             toast.success(ticketInfo + "\n\n📱 Opening mobile ticket view...", { duration: 4000 });
             
-            // For mobile, open in same tab for better UX
+            // For mobile, open in same tab for better UX - redirect to beautiful mobile page
             setTimeout(() => {
               if (mobileUrl) {
-                // Mobile-optimized URL available
+                // Mobile-optimized URL available - this should redirect to our beautiful mobile page
                 window.location.href = mobileUrl;
               } else if (validationUrl && validationUrl.includes('/api/bookings/validate')) {
                 // Fallback to validation with mobile parameter
@@ -621,11 +621,11 @@ export default function QRScannerPage() {
         {/* Scanner Section */}
         <Card className="mb-6 bg-white/95 backdrop-blur-sm">
           <CardHeader className="text-center pb-4">
-            <CardTitle className="flex items-center justify-center text-gray-800">
-              <QrCode className="h-6 w-6 mr-2 text-blue-600" />
+            <CardTitle className="flex items-center justify-center text-foreground">
+              <QrCode className="h-6 w-6 mr-2 text-blue-600 dark:text-blue-400" />
               Ticket Validator
             </CardTitle>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               Scan QR code or enter PNR manually to validate tickets
             </p>
           </CardHeader>
@@ -701,7 +701,7 @@ export default function QRScannerPage() {
                   <Button
                     onClick={triggerFileUpload}
                     variant="outline"
-                    className="w-full h-16 border-2 border-dashed border-gray-300 hover:border-blue-500 hover:bg-blue-50 text-gray-700 hover:text-blue-700"
+                    className="w-full h-16 border-2 border-dashed border-border hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 text-foreground hover:text-blue-700 dark:hover:text-blue-300"
                   >
                     <Upload className="h-8 w-8 mr-3" />
                     <div className="text-left">
@@ -718,10 +718,10 @@ export default function QRScannerPage() {
             {/* Manual Entry */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-gray-300" />
+                <span className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-500">Or</span>
+                <span className="bg-card px-2 text-muted-foreground">Or</span>
               </div>
             </div>
 
@@ -798,7 +798,7 @@ export default function QRScannerPage() {
                 {/* Main passenger info */}
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <div className="flex items-center text-gray-600 mb-1">
+                    <div className="flex items-center text-muted-foreground mb-1">
                       <QrCode className="h-4 w-4 mr-1" />
                       PNR Number
                     </div>
@@ -807,7 +807,7 @@ export default function QRScannerPage() {
                     </div>
                   </div>
                   <div>
-                    <div className="flex items-center text-gray-600 mb-1">
+                    <div className="flex items-center text-muted-foreground mb-1">
                       <User className="h-4 w-4 mr-1" />
                       Primary Passenger
                     </div>
@@ -816,7 +816,7 @@ export default function QRScannerPage() {
                     </div>
                   </div>
                   <div>
-                    <div className="flex items-center text-gray-600 mb-1">
+                    <div className="flex items-center text-muted-foreground mb-1">
                       <MapPin className="h-4 w-4 mr-1" />
                       Route
                     </div>
@@ -825,7 +825,7 @@ export default function QRScannerPage() {
                     </div>
                   </div>
                   <div>
-                    <div className="flex items-center text-gray-600 mb-1">
+                    <div className="flex items-center text-muted-foreground mb-1">
                       <Calendar className="h-4 w-4 mr-1" />
                       Departure
                     </div>

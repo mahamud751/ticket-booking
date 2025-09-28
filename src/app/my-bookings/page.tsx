@@ -197,15 +197,15 @@ export default function MyBookingsPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "CONFIRMED":
-        return "bg-green-100 text-green-800 border-green-200";
+        return "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700";
       case "PENDING":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+        return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-700";
       case "CANCELLED":
-        return "bg-red-100 text-red-800 border-red-200";
+        return "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border-red-200 dark:border-red-700";
       case "UNKNOWN":
-        return "bg-gray-100 text-gray-800 border-gray-200";
+        return "bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
+        return "bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700";
     }
   };
 
@@ -215,12 +215,12 @@ export default function MyBookingsPage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-gray-50">
+      <main className="min-h-screen bg-background">
         <Header />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span className="ml-2 text-gray-600">Loading bookings...</span>
+            <span className="ml-2 text-muted-foreground">Loading bookings...</span>
           </div>
         </div>
       </main>
@@ -228,14 +228,14 @@ export default function MyBookingsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-background">
       <Header />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Bookings</h1>
-          <p className="text-gray-600">
+          <h1 className="text-3xl font-bold text-foreground mb-2">My Bookings</h1>
+          <p className="text-muted-foreground">
             Manage and view all your bus ticket bookings
           </p>
         </div>
@@ -244,7 +244,7 @@ export default function MyBookingsPage() {
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Search className="h-5 w-5 text-blue-600" />
+              <Search className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               Search Bookings
             </CardTitle>
           </CardHeader>
@@ -289,7 +289,7 @@ export default function MyBookingsPage() {
             <CardContent className="p-8 text-center">
               <div className="text-6xl mb-4">🎫</div>
               <h3 className="text-lg font-semibold mb-2">No Bookings Found</h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-muted-foreground mb-4">
                 {searchQuery
                   ? "No bookings match your search criteria."
                   : "You haven't made any bookings yet."}
@@ -329,7 +329,7 @@ export default function MyBookingsPage() {
                       {/* Journey Info */}
                       <div className="lg:col-span-4">
                         <div className="flex items-center gap-2 mb-2">
-                          <MapPin className="h-4 w-4 text-blue-600" />
+                          <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                           <span className="font-semibold text-lg">
                             {booking.schedule?.route?.origin?.name || "Unknown"}{" "}
                             →{" "}
@@ -337,13 +337,13 @@ export default function MyBookingsPage() {
                               "Unknown"}
                           </span>
                         </div>
-                        <div className="flex items-center gap-2 text-gray-600 mb-2">
+                        <div className="flex items-center gap-2 text-muted-foreground mb-2">
                           <Calendar className="h-4 w-4" />
                           <span>
                             {departure.date} at {departure.time}
                           </span>
                         </div>
-                        <div className="text-sm text-gray-600">
+                        <div className="text-sm text-muted-foreground">
                           {booking.schedule?.operator?.name ||
                             "Unknown Operator"}{" "}
                           • {booking.schedule?.bus?.busNumber || "Unknown Bus"}
@@ -354,13 +354,13 @@ export default function MyBookingsPage() {
                       <div className="lg:col-span-3">
                         <div className="space-y-2">
                           <div>
-                            <span className="text-sm text-gray-600">PNR:</span>
+                            <span className="text-sm text-muted-foreground">PNR:</span>
                             <div className="font-semibold">
                               {booking.pnr || "N/A"}
                             </div>
                           </div>
                           <div>
-                            <span className="text-sm text-gray-600">
+                            <span className="text-sm text-muted-foreground">
                               {booking.passengers &&
                               booking.passengers.length > 0
                                 ? "Passengers:"
@@ -390,7 +390,7 @@ export default function MyBookingsPage() {
                             </div>
                           </div>
                           <div>
-                            <span className="text-sm text-gray-600">
+                            <span className="text-sm text-muted-foreground">
                               Seats:
                             </span>
                             <div className="font-medium">
@@ -415,14 +415,14 @@ export default function MyBookingsPage() {
                             </Badge>
                           </div>
                           <div>
-                            <span className="text-sm text-gray-600">
+                            <span className="text-sm text-muted-foreground">
                               Amount:
                             </span>
-                            <div className="text-lg font-bold text-green-600">
+                            <div className="text-lg font-bold text-green-600 dark:text-green-400">
                               ${booking.totalAmount || 0}
                             </div>
                           </div>
-                          <div className="text-xs text-gray-500">
+                          <div className="text-xs text-muted-foreground">
                             Booked on {bookingDate.date}
                           </div>
                         </div>

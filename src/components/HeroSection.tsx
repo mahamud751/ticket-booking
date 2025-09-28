@@ -282,9 +282,9 @@ export default function HeroSection() {
                   >
                     <Label
                       htmlFor="origin"
-                      className="text-gray-700 dark:text-gray-300 font-medium flex items-center"
+                      className="text-foreground font-medium flex items-center"
                     >
-                      <MapPin className="h-4 w-4 mr-2 text-blue-600" />
+                      <MapPin className="h-4 w-4 mr-2 text-blue-600 dark:text-blue-400" />
                       {t('search.from')}
                     </Label>
                     <CityAutoComplete
@@ -332,9 +332,9 @@ export default function HeroSection() {
                   >
                     <Label
                       htmlFor="destination"
-                      className="text-gray-700 dark:text-gray-300 font-medium flex items-center"
+                      className="text-foreground font-medium flex items-center"
                     >
-                      <MapPin className="h-4 w-4 mr-2 text-red-600" />
+                      <MapPin className="h-4 w-4 mr-2 text-red-600 dark:text-red-400" />
                       {t('search.to')}
                     </Label>
                     <CityAutoComplete
@@ -359,12 +359,12 @@ export default function HeroSection() {
                   >
                     <Label
                       htmlFor="date"
-                      className="text-gray-700 font-medium flex items-center"
+                      className="text-foreground font-medium flex items-center"
                     >
-                      <Calendar className="h-4 w-4 mr-2 text-green-600" />
+                      <Calendar className="h-4 w-4 mr-2 text-green-600 dark:text-green-400" />
                       Departure Date
                     </Label>
-                    <motion.div whileFocus={{ scale: 1.02 }}>
+                    <motion.div whileFocus={{ scale: 1.02 }} className="relative">
                       <Input
                         id="date"
                         type="date"
@@ -385,14 +385,29 @@ export default function HeroSection() {
                             toast.error("Please select today or a future date");
                           }
                         }}
-                        className="h-12 text-lg transition-all duration-200 hover:border-blue-400"
+                        className="h-12 text-lg bg-background border-input text-foreground transition-all duration-200 hover:border-green-400 focus:border-green-500 focus:ring-green-500/20 shadow-sm hover:shadow-md rounded-lg [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:dark:filter [&::-webkit-calendar-picker-indicator]:dark:invert [&::-webkit-calendar-picker-indicator]:dark:brightness-0 [&::-webkit-calendar-picker-indicator]:dark:contrast-200 [&::-webkit-calendar-picker-indicator]:hover:opacity-80 [&::-webkit-calendar-picker-indicator]:transition-all"
                         required
                       />
+                      {/* Custom date field styling wrapper */}
+                      <div className="absolute inset-0 pointer-events-none rounded-lg border-2 border-transparent group-hover:border-green-200 dark:group-hover:border-green-800 transition-colors" />
                     </motion.div>
                     {searchData.departureDate && (
-                      <p className="text-sm text-gray-500">
-                        {formatDate(searchData.departureDate)}
-                      </p>
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="flex items-center justify-between p-2 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-green-600 dark:text-green-400" />
+                          <span className="text-sm font-medium text-green-800 dark:text-green-200">
+                            Selected: {formatDate(searchData.departureDate)}
+                          </span>
+                        </div>
+                        <div className="text-xs text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded-full">
+                          ✓ Valid
+                        </div>
+                      </motion.div>
                     )}
                   </motion.div>
                 </div>
@@ -412,9 +427,9 @@ export default function HeroSection() {
                   >
                     <Label
                       htmlFor="passengers"
-                      className="text-gray-700 font-medium flex items-center text-lg"
+                      className="text-foreground font-medium flex items-center text-lg"
                     >
-                      <Users className="h-5 w-5 mr-2 text-purple-600" />
+                      <Users className="h-5 w-5 mr-2 text-purple-600 dark:text-purple-400" />
                       Select Passengers
                     </Label>
                     <motion.select
@@ -426,7 +441,7 @@ export default function HeroSection() {
                           passengers: parseInt(e.target.value),
                         }))
                       }
-                      className="w-full h-14 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900 text-lg transition-all duration-200 hover:border-purple-400 shadow-sm hover:shadow-md"
+                      className="w-full h-14 px-4 border border-input rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-background text-foreground text-lg transition-all duration-200 hover:border-purple-400 shadow-sm hover:shadow-md"
                       whileFocus={{ scale: 1.02 }}
                     >
                       {[1, 2, 3, 4].map((num) => (
@@ -445,14 +460,14 @@ export default function HeroSection() {
 
                     {/* Passenger count display */}
                     <motion.div
-                      className="flex items-center justify-center p-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200"
+                      className="flex items-center justify-center p-3 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/30 dark:to-blue-900/30 rounded-lg border border-purple-200 dark:border-purple-700"
                       initial={{ scale: 0.9, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ duration: 0.3 }}
                       key={searchData.passengers}
                     >
-                      <Users className="h-5 w-5 text-purple-600 mr-2" />
-                      <span className="text-lg font-semibold text-gray-700">
+                      <Users className="h-5 w-5 text-purple-600 dark:text-purple-400 mr-2" />
+                      <span className="text-lg font-semibold text-foreground">
                         {searchData.passengers}{" "}
                         {searchData.passengers === 1
                           ? "Passenger"
@@ -464,7 +479,7 @@ export default function HeroSection() {
                         animate={{ rotate: [0, 10, -10, 0] }}
                         transition={{ duration: 0.5, delay: 0.2 }}
                       >
-                        <Sparkles className="h-4 w-4 text-yellow-500" />
+                        <Sparkles className="h-4 w-4 text-yellow-500 dark:text-yellow-400" />
                       </motion.div>
                     </motion.div>
                   </motion.div>

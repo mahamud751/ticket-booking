@@ -73,18 +73,18 @@ function SignInForm() {
         <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border-0">
           <CardHeader className="text-center px-4 sm:px-6 pt-6 pb-4">
             <CardTitle className="text-xl sm:text-2xl">Welcome Back</CardTitle>
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-sm sm:text-base text-muted-foreground">
               Enter your credentials to access your account
             </p>
           </CardHeader>
           <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <Label htmlFor="email" className="text-sm sm:text-base text-gray-700">
+                <Label htmlFor="email" className="text-sm sm:text-base text-foreground">
                   Email Address
                 </Label>
                 <div className="relative mt-1">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
@@ -103,11 +103,11 @@ function SignInForm() {
               </div>
 
               <div>
-                <Label htmlFor="password" className="text-sm sm:text-base text-gray-700">
+                <Label htmlFor="password" className="text-sm sm:text-base text-foreground">
                   Password
                 </Label>
                 <div className="relative mt-1">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
@@ -125,7 +125,7 @@ function SignInForm() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 touch-manipulation"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground touch-manipulation"
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -158,7 +158,7 @@ function SignInForm() {
             <div className="relative">
               <Separator />
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="bg-white px-4 text-sm text-gray-500">
+                <span className="bg-card px-4 text-sm text-muted-foreground">
                   Or continue with
                 </span>
               </div>
@@ -191,12 +191,12 @@ function SignInForm() {
             </Button>
 
             {/* Demo Account Info */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+            <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-3 sm:p-4">
               <div className="text-xs sm:text-sm">
-                <div className="font-medium text-blue-800 mb-2">
+                <div className="font-medium text-blue-800 dark:text-blue-300 mb-2">
                   Demo Account:
                 </div>
-                <div className="text-blue-700 space-y-1">
+                <div className="text-blue-700 dark:text-blue-400 space-y-1">
                   <div>Email: admin@busticketing.com</div>
                   <div>Password: admin123</div>
                 </div>
@@ -206,7 +206,7 @@ function SignInForm() {
             <div className="text-center">
               <button
                 onClick={() => router.push("/")}
-                className="text-blue-600 hover:text-blue-800 text-sm touch-manipulation"
+                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm touch-manipulation"
               >
                 ← Back to Home
               </button>

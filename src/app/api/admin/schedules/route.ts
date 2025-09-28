@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
     const totalPages = Math.ceil(totalCount / limit);
     const averagePrice = averagePriceResult._avg.basePrice || 0;
 
-    const [schedules, filteredTotal] = await Promise.all([
+    const [schedules, ] = await Promise.all([
       prisma.schedule.findMany({
         where,
         include: {

@@ -132,7 +132,7 @@ export default function Header() {
 
       {/* Animated Bus Section */}
       <motion.div
-        className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden"
+        className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-900/20 dark:via-indigo-900/20 dark:to-purple-900/20 relative overflow-hidden"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
@@ -258,19 +258,19 @@ function MobileBottomNav() {
               <motion.button
                 key={item.id}
                 onClick={() => handleNavClick(item)}
-                className={`flex flex-col items-center justify-center py-2 px-3 rounded-lg min-w-0 flex-1 touch-manipulation ${
+                className={`flex flex-col items-center justify-center py-2 px-3 rounded-lg min-w-0 flex-1 touch-manipulation transition-all duration-200 ${
                   isActive 
-                    ? "text-blue-600 bg-blue-50" 
-                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+                    ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/50" 
+                    : "text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 hover:bg-muted"
                 }`}
                 whileTap={{ scale: 0.95 }}
                 transition={{ duration: 0.1 }}
               >
                 <Icon className={`h-5 w-5 mb-1 ${
-                  isActive ? "text-blue-600" : "text-gray-600"
+                  isActive ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground"
                 }`} />
                 <span className={`text-xs font-medium truncate ${
-                  isActive ? "text-blue-600" : "text-gray-600"
+                  isActive ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground"
                 }`}>
                   {item.label}
                 </span>
@@ -282,7 +282,7 @@ function MobileBottomNav() {
         {/* Right side auth button */}
         <motion.button
           onClick={handleAuthAction}
-          className="flex flex-col items-center justify-center py-2 px-3 rounded-lg min-w-0 touch-manipulation text-red-600 hover:text-red-700 hover:bg-red-50 ml-2"
+          className="flex flex-col items-center justify-center py-2 px-3 rounded-lg min-w-0 touch-manipulation text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 ml-2"
           whileTap={{ scale: 0.95 }}
           transition={{ duration: 0.1 }}
         >

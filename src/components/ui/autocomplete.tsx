@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Check, ChevronDown, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Check, ChevronDown, MapPin } from "lucide-react";
+import { useMemo, useState } from "react";
 
 interface City {
   code: string;
@@ -72,7 +71,7 @@ export function CityAutoComplete({
           disabled={disabled}
         >
           <div className="flex items-center">
-            <MapPin className="h-4 w-4 mr-2 text-blue-600" />
+            <MapPin className="h-4 w-4 mr-2 text-blue-600 dark:text-blue-400" />
             {selectedCity ? selectedCity.name : placeholder}
           </div>
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -99,16 +98,16 @@ export function CityAutoComplete({
                 }}
               >
                 <div className="flex items-center">
-                  <MapPin className="h-4 w-4 mr-2 text-blue-600" />
+                  <MapPin className="h-4 w-4 mr-2 text-blue-600 dark:text-blue-400" />
                   <div>
                     <div className="font-medium">{city.name}</div>
                     {city.state && (
-                      <div className="text-sm text-gray-500">{city.state}, {city.country}</div>
+                      <div className="text-sm text-muted-foreground">{city.state}, {city.country}</div>
                     )}
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <span className="text-xs bg-gray-100 px-2 py-1 rounded font-mono mr-2">
+                  <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded font-mono mr-2">
                     {city.code}
                   </span>
                   <Check

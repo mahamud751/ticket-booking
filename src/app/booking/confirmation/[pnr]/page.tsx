@@ -347,7 +347,7 @@ export default function BookingConfirmationPage() {
   const bookingDate = formatDateTime(booking.bookingDate);
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-background">
       <Header />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -356,10 +356,10 @@ export default function BookingConfirmationPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
             <CheckCircle className="h-8 w-8 text-green-600" />
           </div>
-          <h1 className={`font-bold text-gray-900 mb-2 ${isMobileView ? 'text-2xl' : 'text-3xl'}`}>
+          <h1 className={`font-bold text-foreground mb-2 ${isMobileView ? 'text-2xl' : 'text-3xl'}`}>
             Booking Confirmed!
           </h1>
-          <p className={`text-gray-600 ${isMobileView ? 'text-base' : 'text-lg'}`}>
+          <p className={`text-muted-foreground ${isMobileView ? 'text-base' : 'text-lg'}`}>
             Your bus ticket has been successfully booked
           </p>
           <div className="mt-4">
@@ -416,16 +416,16 @@ export default function BookingConfirmationPage() {
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <div className="text-2xl font-bold text-gray-900">
+                  <div className="text-2xl font-bold text-foreground">
                     {booking.schedule.route.origin.name}
                   </div>
-                  <div className="text-gray-600">Origin</div>
+                  <div className="text-muted-foreground">Origin</div>
                   <div className="flex items-center gap-2 mt-2">
-                    <Calendar className="h-4 w-4 text-gray-400" />
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm">{departure.date}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-gray-400" />
+                    <Clock className="h-4 w-4 text-muted-foreground" />
                     <span className="text-lg font-semibold">
                       {departure.time}
                     </span>
@@ -433,16 +433,16 @@ export default function BookingConfirmationPage() {
                 </div>
 
                 <div className="text-right md:text-left">
-                  <div className="text-2xl font-bold text-gray-900">
+                  <div className="text-2xl font-bold text-foreground">
                     {booking.schedule.route.destination.name}
                   </div>
-                  <div className="text-gray-600">Destination</div>
+                  <div className="text-muted-foreground">Destination</div>
                   <div className="flex items-center gap-2 mt-2 justify-end md:justify-start">
-                    <Calendar className="h-4 w-4 text-gray-400" />
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm">{arrival.date}</span>
                   </div>
                   <div className="flex items-center gap-2 justify-end md:justify-start">
-                    <Clock className="h-4 w-4 text-gray-400" />
+                    <Clock className="h-4 w-4 text-muted-foreground" />
                     <span className="text-lg font-semibold">
                       {arrival.time}
                     </span>
@@ -451,7 +451,7 @@ export default function BookingConfirmationPage() {
               </div>
 
               <div className="flex items-center justify-center">
-                <div className="flex items-center gap-4 text-gray-500">
+                <div className="flex items-center gap-4 text-muted-foreground">
                   <Navigation className="h-4 w-4" />
                   <span>
                     {formatDistance(booking.schedule.route.distance || 0)} km
@@ -476,7 +476,7 @@ export default function BookingConfirmationPage() {
                   <div className="text-lg font-semibold">
                     {booking.schedule.operator.name}
                   </div>
-                  <div className="text-gray-600">
+                  <div className="text-muted-foreground">
                     {booking.schedule.bus.busNumber}
                   </div>
                   <Badge variant="outline" className="mt-2">
@@ -485,7 +485,7 @@ export default function BookingConfirmationPage() {
                 </div>
 
                 <div>
-                  <div className="text-sm text-gray-600 mb-2">Amenities</div>
+                  <div className="text-sm text-muted-foreground mb-2">Amenities</div>
                   <div className="flex flex-wrap gap-2">
                     {(booking.schedule.bus.amenities || []).map((amenity) => (
                       <Badge
@@ -513,17 +513,17 @@ export default function BookingConfirmationPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Primary Contact Information */}
-                <div className="pb-3 border-b border-gray-200">
-                  <h4 className="font-medium text-gray-900 mb-2">
+                <div className="pb-3 border-b border-border">
+                  <h4 className="font-medium text-foreground mb-2">
                     Contact Information
                   </h4>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Phone className="h-4 w-4 text-gray-400" />
+                      <Phone className="h-4 w-4 text-muted-foreground" />
                       <span>{booking.passengerPhone}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-gray-400" />
+                      <Mail className="h-4 w-4 text-muted-foreground" />
                       <span>{booking.passengerEmail}</span>
                     </div>
                   </div>
@@ -531,7 +531,7 @@ export default function BookingConfirmationPage() {
 
                 {/* Individual Passengers */}
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">
+                  <h4 className="font-medium text-foreground mb-2">
                     {booking.passengers && booking.passengers.length > 0
                       ? "Passengers"
                       : "Passenger"}
@@ -543,16 +543,16 @@ export default function BookingConfirmationPage() {
                           key={passenger.id}
                           className="flex items-center gap-2"
                         >
-                          <User className="h-4 w-4 text-gray-400" />
+                          <User className="h-4 w-4 text-muted-foreground" />
                           <span>{passenger.passengerName}</span>
-                          <span className="text-sm text-gray-500">
+                          <span className="text-sm text-muted-foreground">
                             (Seat {passenger.seat.seatNumber})
                           </span>
                         </div>
                       ))
                     ) : (
                       <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-gray-400" />
+                        <User className="h-4 w-4 text-muted-foreground" />
                         <span>{booking.passengerName}</span>
                       </div>
                     )}
@@ -570,7 +570,7 @@ export default function BookingConfirmationPage() {
                   {(booking.seats || []).map((seatBooking) => (
                     <div
                       key={seatBooking.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-muted rounded-lg"
                     >
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center text-sm font-medium text-blue-700">
@@ -580,7 +580,7 @@ export default function BookingConfirmationPage() {
                           <div className="font-medium">
                             Seat {seatBooking.seat?.seatNumber || "N/A"}
                           </div>
-                          <div className="text-sm text-gray-600">
+                          <div className="text-sm text-muted-foreground">
                             {seatBooking.seat?.seatType || "Regular"}
                           </div>
                         </div>
@@ -610,11 +610,11 @@ export default function BookingConfirmationPage() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <div className="text-sm text-gray-600">Booking Reference</div>
+                  <div className="text-sm text-muted-foreground">Booking Reference</div>
                   <div className="font-semibold">{booking.pnr}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-600">Booking Status</div>
+                  <div className="text-sm text-muted-foreground">Booking Status</div>
                   <Badge
                     variant={
                       booking.status === "CONFIRMED" ? "default" : "secondary"
@@ -625,7 +625,7 @@ export default function BookingConfirmationPage() {
                   </Badge>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-600">Booked On</div>
+                  <div className="text-sm text-muted-foreground">Booked On</div>
                   <div className="font-semibold">
                     {bookingDate.date} at {bookingDate.time}
                   </div>

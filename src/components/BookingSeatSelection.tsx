@@ -396,11 +396,11 @@ export default function BookingSeatSelection({
       "w-10 h-10 rounded-lg border-2 cursor-pointer transition-all duration-200 flex items-center justify-center text-xs font-medium relative";
 
     if (seat.status === "booked") {
-      return `${baseClasses} bg-red-100 border-red-300 cursor-not-allowed text-red-700`;
+      return `${baseClasses} bg-red-100 dark:bg-red-900/30 border-red-300 dark:border-red-700 cursor-not-allowed text-red-700 dark:text-red-300`;
     }
 
     if (seat.status === "locked" && !selectedSeats.includes(seat.id)) {
-      return `${baseClasses} bg-yellow-100 border-yellow-300 cursor-not-allowed text-yellow-700`;
+      return `${baseClasses} bg-yellow-100 dark:bg-yellow-900/30 border-yellow-300 dark:border-yellow-700 cursor-not-allowed text-yellow-700 dark:text-yellow-300`;
     }
 
     if (selectedSeats.includes(seat.id)) {
@@ -408,14 +408,14 @@ export default function BookingSeatSelection({
     }
 
     if (seat.seatType === "PREMIUM") {
-      return `${baseClasses} bg-purple-50 border-purple-300 hover:bg-purple-100 text-purple-700 hover:border-purple-400`;
+      return `${baseClasses} bg-purple-50 dark:bg-purple-900/30 border-purple-300 dark:border-purple-700 hover:bg-purple-100 dark:hover:bg-purple-900/50 text-purple-700 dark:text-purple-300 hover:border-purple-400`;
     }
 
     if (seat.seatType === "SLEEPER") {
-      return `${baseClasses} bg-indigo-50 border-indigo-300 hover:bg-indigo-100 text-indigo-700 hover:border-indigo-400`;
+      return `${baseClasses} bg-indigo-50 dark:bg-indigo-900/30 border-indigo-300 dark:border-indigo-700 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 hover:border-indigo-400`;
     }
 
-    return `${baseClasses} bg-green-50 border-green-300 hover:bg-green-100 text-green-700 hover:border-green-400`;
+    return `${baseClasses} bg-green-50 dark:bg-green-900/30 border-green-300 dark:border-green-700 hover:bg-green-100 dark:hover:bg-green-900/50 text-green-700 dark:text-green-300 hover:border-green-400`;
   };
 
   const totalAmount = selectedSeats.reduce((total, seatId) => {
@@ -447,8 +447,8 @@ export default function BookingSeatSelection({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2 text-gray-600">Loading seat map...</span>
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
+        <span className="ml-2 text-muted-foreground">Loading seat map...</span>
       </div>
     );
   }
@@ -456,7 +456,7 @@ export default function BookingSeatSelection({
   if (!schedule) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-600">Schedule not found</p>
+        <p className="text-muted-foreground">Schedule not found</p>
       </div>
     );
   }
@@ -470,14 +470,14 @@ export default function BookingSeatSelection({
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-2">
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4 mr-1" />
                 Route
               </div>
               <div className="text-lg font-semibold">
                 {schedule.route.origin.name} → {schedule.route.destination.name}
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-muted-foreground">
                 {formatDistance(schedule.route.distance || 0)} km •{" "}
                 {Math.floor((schedule.route.duration || 0) / 60)}h{" "}
                 {(schedule.route.duration || 0) % 60}m
@@ -485,23 +485,23 @@ export default function BookingSeatSelection({
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-muted-foreground">
                 <Calendar className="h-4 w-4 mr-1" />
                 Departure
               </div>
               <div className="text-lg font-semibold">{departure.time}</div>
-              <div className="text-sm text-gray-600">{departure.date}</div>
+              <div className="text-sm text-muted-foreground">{departure.date}</div>
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-muted-foreground">
                 <Users className="h-4 w-4 mr-1" />
                 Bus Details
               </div>
               <div className="text-lg font-semibold">
                 {schedule.operator.name}
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-muted-foreground">
                 {schedule.bus.busNumber} • {schedule.bus.busType}
               </div>
             </div>
@@ -517,8 +517,8 @@ export default function BookingSeatSelection({
               <CardTitle className="text-lg">Select Your Seats</CardTitle>
               {lockTimeRemaining > 0 && (
                 <div className="flex items-center gap-2 text-sm">
-                  <Clock className="h-4 w-4 text-orange-500" />
-                  <span className="text-orange-600 font-medium">
+                  <Clock className="h-4 w-4 text-orange-500 dark:text-orange-400" />
+                  <span className="text-orange-600 dark:text-orange-400 font-medium">
                     {formatTime(lockTimeRemaining)}
                   </span>
                 </div>
@@ -527,7 +527,7 @@ export default function BookingSeatSelection({
             <CardContent className="space-y-6">
               {/* Driver area */}
               <div className="flex justify-center">
-                <div className="bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium">
+                <div className="bg-muted px-4 py-2 rounded-lg text-sm font-medium">
                   🚗 Driver
                 </div>
               </div>
@@ -536,7 +536,7 @@ export default function BookingSeatSelection({
               <div className="space-y-4">
                 {Object.entries(seatMap).map(([row, rowSeats]) => (
                   <div key={row} className="flex items-center gap-2">
-                    <div className="w-6 text-center text-sm font-medium text-gray-600">
+                    <div className="w-6 text-center text-sm font-medium text-muted-foreground">
                       {row}
                     </div>
                     <div className="flex gap-2">
@@ -575,13 +575,13 @@ export default function BookingSeatSelection({
               </div>
 
               {/* Legend */}
-              <div className="flex flex-wrap gap-4 justify-center text-xs border-t pt-4">
+              <div className="flex flex-wrap gap-4 justify-center text-xs border-t border-border pt-4">
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-green-50 border-2 border-green-300 rounded"></div>
+                  <div className="w-4 h-4 bg-green-50 dark:bg-green-900/30 border-2 border-green-300 dark:border-green-700 rounded"></div>
                   <span>Available</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-purple-50 border-2 border-purple-300 rounded"></div>
+                  <div className="w-4 h-4 bg-purple-50 dark:bg-purple-900/30 border-2 border-purple-300 dark:border-purple-700 rounded"></div>
                   <span>Premium</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -589,11 +589,11 @@ export default function BookingSeatSelection({
                   <span>Selected</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-yellow-100 border-2 border-yellow-300 rounded"></div>
+                  <div className="w-4 h-4 bg-yellow-100 dark:bg-yellow-900/30 border-2 border-yellow-300 dark:border-yellow-700 rounded"></div>
                   <span>Locked</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-red-100 border-2 border-red-300 rounded"></div>
+                  <div className="w-4 h-4 bg-red-100 dark:bg-red-900/30 border-2 border-red-300 dark:border-red-700 rounded"></div>
                   <span>Booked</span>
                 </div>
               </div>
@@ -606,13 +606,13 @@ export default function BookingSeatSelection({
           {/* Selected Seats */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">
+              <CardTitle className="text-lg text-foreground">
                 Selected Seats ({selectedSeats.length}/{passengers})
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {selectedSeats.length === 0 ? (
-                <p className="text-gray-400 text-center py-4">
+                <p className="text-muted-foreground text-center py-4">
                   No seats selected
                 </p>
               ) : (
@@ -624,10 +624,10 @@ export default function BookingSeatSelection({
                     return (
                       <div
                         key={seatId}
-                        className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                        className="flex items-center justify-between p-2 bg-muted rounded"
                       >
                         <div className="flex items-center gap-2">
-                          <User className="h-4 w-4 text-blue-600" />
+                          <User className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                           <span className="font-medium">
                             Seat {seat.seatNumber || "N/A"}
                           </span>
@@ -639,7 +639,7 @@ export default function BookingSeatSelection({
                           <span className="font-medium">${seat.price}</span>
                           <button
                             onClick={() => handleSeatClick(seatId)}
-                            className="text-gray-400 hover:text-red-500"
+                            className="text-muted-foreground hover:text-red-500 dark:hover:text-red-400"
                           >
                             <X className="h-4 w-4" />
                           </button>
@@ -652,7 +652,7 @@ export default function BookingSeatSelection({
                     <div className="pt-3 border-t">
                       <div className="flex justify-between items-center text-lg font-bold">
                         <span>Total:</span>
-                        <span className="text-blue-600">${totalAmount}</span>
+                        <span className="text-blue-600 dark:text-blue-400">${totalAmount}</span>
                       </div>
                     </div>
                   )}
@@ -664,21 +664,21 @@ export default function BookingSeatSelection({
           {/* Passenger Information */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Passenger Information</CardTitle>
-              <p className="text-sm text-gray-600">
+              <CardTitle className="text-lg text-foreground">Passenger Information</CardTitle>
+              <p className="text-sm text-muted-foreground">
                 Enter individual names and shared contact details
               </p>
             </CardHeader>
             <CardContent className="space-y-6">
               {selectedSeats.length === 0 ? (
-                <p className="text-gray-400 text-center py-4">
+                <p className="text-muted-foreground text-center py-4">
                   Select seats to enter passenger information
                 </p>
               ) : (
                 <>
                   {/* Individual Passenger Names */}
                   <div className="space-y-4">
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className="font-semibold text-foreground">
                       Passenger Names
                     </h3>
                     {selectedSeats.map((seatId, index) => {
@@ -688,10 +688,10 @@ export default function BookingSeatSelection({
                       return (
                         <div
                           key={seatId}
-                          className="flex items-center gap-3 p-3 border rounded-lg"
+                          className="flex items-center gap-3 p-3 border border-border rounded-lg"
                         >
                           <div className="flex items-center gap-2 min-w-0 flex-1">
-                            <User className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                            <User className="h-4 w-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
                             <div className="flex-shrink-0">
                               <span className="font-medium text-sm">
                                 Seat {seatNumber}:
@@ -722,11 +722,11 @@ export default function BookingSeatSelection({
                   </div>
 
                   {/* Shared Contact Information */}
-                  <div className="space-y-4 pt-4 border-t">
-                    <h3 className="font-semibold text-gray-900">
+                  <div className="space-y-4 pt-4 border-t border-border">
+                    <h3 className="font-semibold text-foreground">
                       Contact Information
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       This will be used for all passengers
                     </p>
 

@@ -125,7 +125,7 @@ export default function SignUpPage() {
 
         <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl mx-2 sm:mx-0">
           <CardHeader className="text-center pb-3 sm:pb-4">
-            <CardTitle className="text-lg sm:text-xl text-gray-900">
+            <CardTitle className="text-lg sm:text-xl text-foreground">
               Sign up for BusTicket
             </CardTitle>
           </CardHeader>
@@ -133,11 +133,11 @@ export default function SignUpPage() {
             <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
               {/* Name Input */}
               <div>
-                <Label htmlFor="name" className="text-gray-700 font-medium">
+                <Label htmlFor="name" className="text-foreground font-medium">
                   Full Name
                 </Label>
                 <div className="mt-1 relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
                   <Input
                     id="name"
                     name="name"
@@ -153,11 +153,11 @@ export default function SignUpPage() {
 
               {/* Email Input */}
               <div>
-                <Label htmlFor="email" className="text-gray-700 font-medium">
+                <Label htmlFor="email" className="text-foreground font-medium">
                   Email Address
                 </Label>
                 <div className="mt-1 relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
                   <Input
                     id="email"
                     name="email"
@@ -173,11 +173,11 @@ export default function SignUpPage() {
 
               {/* Phone Input */}
               <div>
-                <Label htmlFor="phone" className="text-gray-700 font-medium">
+                <Label htmlFor="phone" className="text-foreground font-medium">
                   Phone Number
                 </Label>
                 <div className="mt-1 relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
                   <Input
                     id="phone"
                     name="phone"
@@ -193,11 +193,11 @@ export default function SignUpPage() {
 
               {/* Password Input */}
               <div>
-                <Label htmlFor="password" className="text-gray-700 font-medium">
+                <Label htmlFor="password" className="text-foreground font-medium">
                   Password
                 </Label>
                 <div className="mt-1 relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
                   <Input
                     id="password"
                     name="password"
@@ -211,7 +211,7 @@ export default function SignUpPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 touch-manipulation p-1"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground touch-manipulation p-1"
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -226,12 +226,12 @@ export default function SignUpPage() {
               <div>
                 <Label
                   htmlFor="confirmPassword"
-                  className="text-gray-700 font-medium"
+                  className="text-foreground font-medium"
                 >
                   Confirm Password
                 </Label>
                 <div className="mt-1 relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
                   <Input
                     id="confirmPassword"
                     name="confirmPassword"
@@ -245,7 +245,7 @@ export default function SignUpPage() {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 touch-manipulation p-1"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground touch-manipulation p-1"
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="h-5 w-5" />

@@ -273,7 +273,7 @@ Status: ${booking.status}
                     {/* Journey Details */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                       <div className="flex items-center space-x-2">
-                        <Calendar className="h-4 w-4 text-gray-500" />
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
                         <div>
                           <div className="font-semibold">
                             {new Date(booking.schedule.departureTime).toLocaleDateString()}
@@ -285,7 +285,7 @@ Status: ${booking.status}
                       </div>
 
                       <div className="flex items-center space-x-2">
-                        <User className="h-4 w-4 text-gray-500" />
+                        <User className="h-4 w-4 text-muted-foreground" />
                         <div>
                           <div className="font-semibold">{booking.passengerInfo.name}</div>
                           <div className="text-gray-600 dark:text-gray-400">
@@ -295,7 +295,7 @@ Status: ${booking.status}
                       </div>
 
                       <div className="flex items-center space-x-2">
-                        <MapPin className="h-4 w-4 text-gray-500" />
+                        <MapPin className="h-4 w-4 text-muted-foreground" />
                         <div>
                           <div className="font-semibold">
                             Seats: {booking.seats.map(s => s.seatNumber).join(", ")}
@@ -310,15 +310,15 @@ Status: ${booking.status}
                     {/* QR Code */}
                     <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 text-center">
                       <div className="w-32 h-32 bg-white dark:bg-gray-100 rounded-lg mx-auto mb-2 flex items-center justify-center">
-                        <QrCode className="h-16 w-16 text-gray-400" />
+                        <QrCode className="h-16 w-16 text-muted-foreground" />
                       </div>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                      <p className="text-xs text-muted-foreground">
                         Show this QR code to bus staff
                       </p>
                     </div>
 
                     {/* Actions */}
-                    <div className="flex flex-wrap gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div className="flex flex-wrap gap-2 pt-4 border-t border-border">
                       <Button
                         variant="outline"
                         size="sm"

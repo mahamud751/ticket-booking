@@ -122,15 +122,15 @@ export default function SearchResults({
   const getBusTypeColor = (busType: string) => {
     switch (busType) {
       case "LUXURY":
-        return "bg-purple-100 text-purple-800 border-purple-200";
+        return "bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-700";
       case "AC":
-        return "bg-blue-100 text-blue-800 border-blue-200";
+        return "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-700";
       case "NON_AC":
-        return "bg-gray-100 text-gray-800 border-gray-200";
+        return "bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700";
       case "SLEEPER":
-        return "bg-green-100 text-green-800 border-green-200";
+        return "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-700";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
+        return "bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700";
     }
   };
 
@@ -143,16 +143,16 @@ export default function SearchResults({
               <div className="space-y-4">
                 <div className="flex justify-between items-start">
                   <div className="space-y-2">
-                    <div className="h-6 bg-gray-200 rounded w-32"></div>
-                    <div className="h-4 bg-gray-200 rounded w-24"></div>
+                    <div className="h-6 bg-muted rounded w-32"></div>
+                    <div className="h-4 bg-muted rounded w-24"></div>
                   </div>
-                  <div className="h-8 bg-gray-200 rounded w-20"></div>
+                  <div className="h-8 bg-muted rounded w-20"></div>
                 </div>
-                <div className="h-4 bg-gray-200 rounded w-full"></div>
+                <div className="h-4 bg-muted rounded w-full"></div>
                 <div className="flex space-x-4">
-                  <div className="h-4 bg-gray-200 rounded w-16"></div>
-                  <div className="h-4 bg-gray-200 rounded w-16"></div>
-                  <div className="h-4 bg-gray-200 rounded w-16"></div>
+                  <div className="h-4 bg-muted rounded w-16"></div>
+                  <div className="h-4 bg-muted rounded w-16"></div>
+                  <div className="h-4 bg-muted rounded w-16"></div>
                 </div>
               </div>
             </CardContent>
@@ -164,10 +164,10 @@ export default function SearchResults({
 
   if (error) {
     return (
-      <Card className="border-red-200">
+      <Card className="border-red-200 dark:border-red-800">
         <CardContent className="p-6 text-center">
-          <div className="text-red-600 mb-2">⚠️ Error</div>
-          <p className="text-gray-600">{error}</p>
+          <div className="text-red-600 dark:text-red-400 mb-2">⚠️ Error</div>
+          <p className="text-muted-foreground">{error}</p>
           <Button
             variant="outline"
             className="mt-4"
@@ -186,7 +186,7 @@ export default function SearchResults({
         <CardContent className="p-6 text-center">
           <div className="text-6xl mb-4">🚌</div>
           <h3 className="text-lg font-semibold mb-2">No buses found</h3>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             No buses are available for the selected route and date. Try
             searching for a different date or route.
           </p>
@@ -201,7 +201,7 @@ export default function SearchResults({
         <h2 className="text-xl font-semibold">
           {routes.length} bus{routes.length !== 1 ? "es" : ""} found
         </h2>
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-muted-foreground">
           {searchParams.origin} → {searchParams.destination}
         </div>
       </div>
@@ -217,14 +217,14 @@ export default function SearchResults({
               <div className="flex-1">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-foreground">
                       {route.operator.name}
                     </h3>
                     <div className="flex items-center gap-2 mt-1">
                       <Badge className={getBusTypeColor(route.bus.busType)}>
                         {route.bus.busType.replace("_", " ")}
                       </Badge>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-muted-foreground">
                         {route.bus.busNumber}
                       </span>
                     </div>
@@ -244,22 +244,22 @@ export default function SearchResults({
                       <div className="text-lg font-semibold">
                         {formatTime(route.schedule.departureTime)}
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-muted-foreground">
                         {route.route.origin.name}
                       </div>
                     </div>
 
-                    <div className="flex items-center text-gray-400">
-                      <div className="border-t border-gray-300 w-12"></div>
+                    <div className="flex items-center text-muted-foreground">
+                      <div className="border-t border-border w-12"></div>
                       <Clock className="h-4 w-4 mx-2" />
-                      <div className="border-t border-gray-300 w-12"></div>
+                      <div className="border-t border-border w-12"></div>
                     </div>
 
                     <div className="text-center">
                       <div className="text-lg font-semibold">
                         {formatTime(route.schedule.arrivalTime)}
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-muted-foreground">
                         {route.route.destination.name}
                       </div>
                     </div>
@@ -269,7 +269,7 @@ export default function SearchResults({
                     <div className="text-sm font-medium">
                       {formatDuration(route.schedule.duration)}
                     </div>
-                    <div className="text-xs text-gray-600">
+                    <div className="text-xs text-muted-foreground">
                       {formatDistance(route.route.distance || 0)} km
                     </div>
                   </div>
@@ -281,7 +281,7 @@ export default function SearchResults({
                     {(route.bus.amenities || []).map((amenity) => (
                       <div
                         key={amenity}
-                        className="flex items-center gap-1 text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded"
+                        className="flex items-center gap-1 text-xs text-muted-foreground bg-muted px-2 py-1 rounded"
                       >
                         {amenityIcons[amenity as keyof typeof amenityIcons]}
                         {amenity.replace("_", " ")}
@@ -291,11 +291,11 @@ export default function SearchResults({
 
                   <div className="flex items-center gap-4 text-sm">
                     <div className="flex items-center gap-1">
-                      <Users className="h-4 w-4 text-green-600" />
-                      <span className="text-green-600 font-medium">
+                      <Users className="h-4 w-4 text-green-600 dark:text-green-400" />
+                      <span className="text-green-600 dark:text-green-400 font-medium">
                         {route.availability.availableSeats}
                       </span>
-                      <span className="text-gray-600">seats left</span>
+                      <span className="text-muted-foreground">seats left</span>
                     </div>
                   </div>
                 </div>

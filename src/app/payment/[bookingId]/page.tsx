@@ -225,7 +225,7 @@ function PaymentForm({ booking }: { booking: BookingData }) {
               </Badge>
             </div>
 
-            <div className="flex items-center gap-2 text-gray-600">
+            <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="h-4 w-4" />
               <span>
                 {departure.date} at {departure.time}
@@ -304,7 +304,7 @@ function PaymentForm({ booking }: { booking: BookingData }) {
               {booking.seats.map((seat) => (
                 <div
                   key={seat.id}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                  className="flex items-center justify-between p-3 bg-muted rounded-lg"
                 >
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center text-sm font-medium text-blue-700">
@@ -366,7 +366,7 @@ function PaymentForm({ booking }: { booking: BookingData }) {
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <div className="bg-muted border border-border rounded-lg p-4">
                     <div className="text-center text-gray-600">
                       <CreditCard className="h-12 w-12 mx-auto mb-2 text-gray-400" />
                       <p className="font-medium">Mock Payment Processing</p>

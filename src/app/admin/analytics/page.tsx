@@ -294,8 +294,8 @@ export default function AdminAnalytics() {
                   {new Date(analytics.period.startDate).toLocaleDateString()} - {new Date(analytics.period.endDate).toLocaleDateString()}
                 </p>
               </div>
-              <div className="p-3 bg-gray-100 rounded-full">
-                <Calendar className="h-6 w-6 text-gray-600" />
+              <div className="p-3 bg-muted rounded-full">
+                <Calendar className="h-6 w-6 text-muted-foreground" />
               </div>
             </div>
           </CardContent>
@@ -402,7 +402,7 @@ export default function AdminAnalytics() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {analytics.dailyTrends.map((day, index) => (
+              {analytics.dailyTrends.map((day, ) => (
                 <div
                   key={day.date}
                   className="flex items-center justify-between p-3 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg"

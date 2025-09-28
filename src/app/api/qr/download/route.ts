@@ -7,6 +7,7 @@ export async function GET(request: NextRequest) {
     const pnr = searchParams.get("pnr");
     const action = searchParams.get("action") || "view";
     const mobile = searchParams.get("mobile") === "true";
+    const format = searchParams.get("format"); // 'json' for API requests
 
     if (!pnr) {
       return NextResponse.json(
@@ -101,62 +102,27 @@ export async function GET(request: NextRequest) {
       };
 
       if (action === "mobile" || shouldHandleAsMobile) {
-        // For mobile requests, return enhanced JSON data with multiple action options
-        const response = {
-          success: true,
-          action: "mobile_download",
-          ticket: ticketData,
-          mobile: {
-            optimized: true,
-            directView: true,
-            downloadable: true
-          },
-          urls: {
-            webView: `/booking/confirmation/${pnr}?mobile=true`,
-            download: `/booking/confirmation/${pnr}`,
-            validation: `/api/bookings/validate?pnr=${pnr}`,
-            scanner: `/qr-scanner?pnr=${pnr}`
-          },
-          qrData: {
-            type: "bus-ticket",
-            version: "2.0",
-            pnr: pnr,
-            mobileOptimized: true
-          },
-          message: "✅ Ticket found! Choose your preferred action:",
-          instructions: [
-            "👁️ View: See full ticket details",
-            "📋 Validate: Check ticket status with bus staff", 
-            "📥 Download: Save ticket for offline use",
-            "📱 Always keep your phone charged during travel",
-            "🆔 Carry a valid photo ID for verification"
-          ],
-          actions: [
-            {
-              type: "view",
-              label: "👁️ View Full Ticket",
-              url: `/booking/confirmation/${pnr}?mobile=true`,
-              primary: true
-            },
-            {
-              type: "validate",
-              label: "📋 Quick Validation",
-              url: `/qr-scanner?pnr=${pnr}`,
-              secondary: true
-            },
-            {
-              type: "download",
-              label: "📥 Download PDF",
-              url: `/booking/confirmation/${pnr}?download=1`,
-              secondary: true
+        // Check if this is an API request for JSON data (from our mobile page)
+        if (format === "json") {
+          // Return JSON data for our mobile QR page
+          return NextResponse.json({
+            success: true,
+            ticket: ticketData,
+            mobile: {
+              optimized: true,
+              directView: true,
+              downloadable: true
             }
-          ]
-        };
+          });
+        }
         
-        console.log(`📱 Mobile QR Response for PNR ${pnr}:`, response);
-        return NextResponse.json(response);
+        // For mobile QR scan requests, redirect to beautiful mobile QR landing page
+        const mobileQRUrl = new URL(`/qr/${pnr}`, request.url);
+        
+        console.log(`📱 Mobile QR Request for PNR ${pnr}: Redirecting to ${mobileQRUrl.toString()}`);
+        return NextResponse.redirect(mobileQRUrl.toString(), 302);
       } else {
-        // Regular download action
+        // For desktop/API requests, return JSON data
         return NextResponse.json({
           success: true,
           action: "download",

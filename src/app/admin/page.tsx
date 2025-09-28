@@ -101,21 +101,21 @@ export default function AdminDashboard() {
 
   if (status === "loading" || isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span className="ml-2 text-gray-600">Loading dashboard...</span>
+        <span className="ml-2 text-muted-foreground">Loading dashboard...</span>
       </div>
     );
   }
 
   if (!session || session.user.role !== "ADMIN") {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl font-bold text-foreground mb-4">
             Access Denied
           </h1>
-          <p className="text-gray-600 mb-8">
+          <p className="text-muted-foreground mb-8">
             You don&apos;t have permission to access this page.
           </p>
           <Button
@@ -130,16 +130,16 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-card border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-foreground">
                 Admin Dashboard
               </h1>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Welcome back, {session.user.name}
               </p>
             </div>
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
               <select
                 value={period}
                 onChange={(e) => setPeriod(e.target.value)}
-                className="px-3 py-1 border border-gray-300 rounded-md text-sm"
+                className="px-3 py-1 border border-input bg-background text-foreground rounded-md text-sm"
               >
                 <option value="today">Today</option>
                 <option value="week">This Week</option>
@@ -177,15 +177,15 @@ export default function AdminDashboard() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">
+                      <p className="text-sm font-medium text-muted-foreground">
                         Total Bookings
                       </p>
-                      <p className="text-3xl font-bold text-gray-900">
+                      <p className="text-3xl font-bold text-foreground">
                         {analytics.overview.totalBookings}
                       </p>
                     </div>
-                    <div className="p-3 bg-blue-100 rounded-full">
-                      <Users className="h-6 w-6 text-blue-600" />
+                    <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                      <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
                   </div>
                 </CardContent>
@@ -195,15 +195,15 @@ export default function AdminDashboard() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">
+                      <p className="text-sm font-medium text-muted-foreground">
                         Total Revenue
                       </p>
-                      <p className="text-3xl font-bold text-gray-900">
+                      <p className="text-3xl font-bold text-foreground">
                         {formatCurrency(analytics.overview.totalRevenue)}
                       </p>
                     </div>
-                    <div className="p-3 bg-green-100 rounded-full">
-                      <DollarSign className="h-6 w-6 text-green-600" />
+                    <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-full">
+                      <DollarSign className="h-6 w-6 text-green-600 dark:text-green-400" />
                     </div>
                   </div>
                 </CardContent>
@@ -213,15 +213,15 @@ export default function AdminDashboard() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">
+                      <p className="text-sm font-medium text-muted-foreground">
                         Conversion Rate
                       </p>
-                      <p className="text-3xl font-bold text-gray-900">
+                      <p className="text-3xl font-bold text-foreground">
                         {analytics.overview.conversionRate.toFixed(1)}%
                       </p>
                     </div>
-                    <div className="p-3 bg-purple-100 rounded-full">
-                      <TrendingUp className="h-6 w-6 text-purple-600" />
+                    <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full">
+                      <TrendingUp className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                     </div>
                   </div>
                 </CardContent>
@@ -231,15 +231,15 @@ export default function AdminDashboard() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">
+                      <p className="text-sm font-medium text-muted-foreground">
                         Pending Bookings
                       </p>
-                      <p className="text-3xl font-bold text-gray-900">
+                      <p className="text-3xl font-bold text-foreground">
                         {analytics.overview.pendingBookings}
                       </p>
                     </div>
-                    <div className="p-3 bg-orange-100 rounded-full">
-                      <Clock className="h-6 w-6 text-orange-600" />
+                    <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-full">
+                      <Clock className="h-6 w-6 text-orange-600 dark:text-orange-400" />
                     </div>
                   </div>
                 </CardContent>
@@ -297,7 +297,7 @@ export default function AdminDashboard() {
                         className="flex items-center justify-between"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-sm font-medium text-blue-600">
+                          <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-sm font-medium text-blue-600 dark:text-blue-400">
                             {index + 1}
                           </div>
                           <div>
@@ -307,7 +307,7 @@ export default function AdminDashboard() {
                                   {route.route.origin} →{" "}
                                   {route.route.destination}
                                 </div>
-                                <div className="text-sm text-gray-600">
+                                <div className="text-sm text-muted-foreground">
                                   {route.route.operator} •{" "}
                                   {formatDate(route.route.departureTime)}
                                 </div>
@@ -321,7 +321,7 @@ export default function AdminDashboard() {
                           <div className="font-semibold">
                             {route.bookings} bookings
                           </div>
-                          <div className="text-sm text-gray-600">
+                          <div className="text-sm text-muted-foreground">
                             {formatCurrency(route.revenue)}
                           </div>
                         </div>
@@ -346,14 +346,14 @@ export default function AdminDashboard() {
                           className="flex items-center justify-between"
                         >
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-sm font-medium text-green-600">
+                            <div className="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-sm font-medium text-green-600 dark:text-green-400">
                               {index + 1}
                             </div>
                             <div>
                               <div className="font-medium">
                                 {operator.operatorName}
                               </div>
-                              <div className="text-sm text-gray-600">
+                              <div className="text-sm text-muted-foreground">
                                 {operator.bookings} bookings
                               </div>
                             </div>
@@ -378,10 +378,10 @@ export default function AdminDashboard() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">
+                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                       {analytics.overview.confirmedBookings}
                     </div>
-                    <div className="text-sm text-gray-600">Confirmed</div>
+                    <div className="text-sm text-muted-foreground">Confirmed</div>
                     <Badge variant="default" className="mt-2">
                       {analytics.overview.totalBookings > 0
                         ? (
@@ -395,10 +395,10 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-orange-600">
+                    <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
                       {analytics.overview.pendingBookings}
                     </div>
-                    <div className="text-sm text-gray-600">Pending</div>
+                    <div className="text-sm text-muted-foreground">Pending</div>
                     <Badge variant="secondary" className="mt-2">
                       {analytics.overview.totalBookings > 0
                         ? (
@@ -412,10 +412,10 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-red-600">
+                    <div className="text-2xl font-bold text-red-600 dark:text-red-400">
                       {analytics.overview.cancelledBookings}
                     </div>
-                    <div className="text-sm text-gray-600">Cancelled</div>
+                    <div className="text-sm text-muted-foreground">Cancelled</div>
                     <Badge variant="destructive" className="mt-2">
                       {analytics.overview.totalBookings > 0
                         ? (
@@ -433,7 +433,7 @@ export default function AdminDashboard() {
           </div>
         ) : (
           <div className="text-center py-8">
-            <p className="text-gray-600">No analytics data available</p>
+            <p className="text-muted-foreground">No analytics data available</p>
           </div>
         )}
       </div>
